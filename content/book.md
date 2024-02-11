@@ -1,16 +1,20 @@
-+++
-title = "图书"
-+++
+---
+title: "图书"
+---
+
+
 
 ## 在读图书
 
-| ![img](https://cdn.weread.qq.com/weread/cover/97/yuewen_822995/t7_yuewen_8229951695023669.jpg) | [明朝那些事儿（全集）](app://obsidian.md/读书/历史/明朝那些事儿（全集）.md) | 当年明月               |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------- |
-| ![img](https://cdn.weread.qq.com/weread/cover/2/yuewen_33638775/t7_yuewen_336387751685962456.jpg) | [苏东坡新传](app://obsidian.md/读书/历史/苏东坡新传.md)      | 李一冰                 |
-| ![img](https://wfqqreader-1252317822.image.myqcloud.com/cover/274/27743274/t7_27743274.jpg) | [夜航西飞（远行译丛）](app://obsidian.md/读书/文学/夜航西飞（远行译丛）.md) | 柏瑞尔·马卡姆          |
-| ![img](https://cdn.weread.qq.com/weread/cover/31/YueWen_921791/t7_YueWen_921791.jpg) | [随机漫步的傻瓜](app://obsidian.md/读书/经济理财/随机漫步的傻瓜.md) | 纳西姆·尼古拉斯·塔勒布 |
-| ![img](https://wfqqreader-1252317822.image.myqcloud.com/cover/145/42557145/t7_42557145.jpg) | [Go语言精进之路：从新手到高手的编程思想、方法和技巧1](app://obsidian.md/读书/计算机/Go语言精进之路：从新手到高手的编程思想、方法和技巧1.md) | 白明                   |
-| ![img](https://img9.doubanio.com/view/subject/l/public/s33531736.jpg) | [深入理解Java虚拟机：JVM高级特性与最佳实践（第3版）](app://obsidian.md/读书/计算机/深入理解Java虚拟机：JVM高级特性与最佳实践（第3版）.md) | 周志明                 |
+| ![img](https://cdn.weread.qq.com/weread/cover/96/YueWen_843465/t7_YueWen_843465.jpg) | [学习之道](app://obsidian.md/读书/个人成长/学习之道.md)      | 芭芭拉·奥克利 |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------- |
+| ![img](https://cdn.weread.qq.com/weread/cover/97/yuewen_822995/t7_yuewen_8229951695023669.jpg) | [明朝那些事儿（全集）](app://obsidian.md/读书/历史/明朝那些事儿（全集）.md) | 当年明月      |
+| ![img](https://cdn.weread.qq.com/weread/cover/2/yuewen_33638775/t7_yuewen_336387751685962456.jpg) | [苏东坡新传](app://obsidian.md/读书/历史/苏东坡新传.md)      | 李一冰        |
+| ![img](https://wfqqreader-1252317822.image.myqcloud.com/cover/243/33889243/t7_33889243.jpg) | [理想国（汉译世界学术名著丛书）](app://obsidian.md/读书/哲学宗教/理想国（汉译世界学术名著丛书）.md) | 柏拉图        |
+| ![img](https://wfqqreader-1252317822.image.myqcloud.com/cover/274/27743274/t7_27743274.jpg) | [夜航西飞（远行译丛）](app://obsidian.md/读书/文学/夜航西飞（远行译丛）.md) | 柏瑞尔·马卡姆 |
+| ![img](https://res.weread.qq.com/wrepub/CB_0XiBb8Bbs7uM6i26gn8bdGS1_parsecover) | [深入理解Java虚拟机：JVM高级特性与最佳实践（第3版） (华章原创精品)](app://obsidian.md/读书/未分类/深入理解Java虚拟机：JVM高级特性与最佳实践（第3版） (华章原创精品).md) | 周志明        |
+| ![img](https://res.weread.qq.com/wrepub/CB_CVy4ek4eUF6I6i26gWEOxEcf_parsecover) | [长安的荔枝](app://obsidian.md/读书/未分类/长安的荔枝.md)    | 马伯庸        |
+| ![img](https://wfqqreader-1252317822.image.myqcloud.com/cover/145/42557145/t7_42557145.jpg) | [Go语言精进之路：从新手到高手的编程思想、方法和技巧1](app://obsidian.md/读书/计算机/Go语言精进之路：从新手到高手的编程思想、方法和技巧1.md) | 白明          |
 
 ## 未读图书
 
@@ -22,12 +26,16 @@ title = "图书"
 
 ## 已读图书
 
-| ![img](https://cdn.weread.qq.com/weread/cover/37/cpplatform_gmaqcuuuamjkvu7knomjim/t7_cpplatform_gmaqcuuuamjkvu7knomjim1703077934.jpg) | [埃隆·马斯克传](app://obsidian.md/读书/人物传记/埃隆·马斯克传.md) | 沃尔特·艾萨克森 |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | --------------- |
-| ![img](https://wfqqreader-1252317822.image.myqcloud.com/cover/694/38773694/t7_38773694.jpg) | [天生有罪（精装珍藏版）](app://obsidian.md/读书/人物传记/天生有罪（精装珍藏版）.md) | 特雷弗·诺亚     |
-| ![img](https://cdn.weread.qq.com/weread/cover/85/YueWen_856170/t7_YueWen_856170.jpg) | [富兰克林自传（经典译林）](app://obsidian.md/读书/人物传记/富兰克林自传（经典译林）.md) | 本杰明·富兰克林 |
-| ![img](https://wfqqreader-1252317822.image.myqcloud.com/cover/820/841820/t7_841820.jpg) | [苏东坡传（纪念典藏版）](app://obsidian.md/读书/人物传记/苏东坡传（纪念典藏版）.md) | 林语堂          |
-| ![img](https://cdn.weread.qq.com/weread/cover/23/yuewen_23774475/t7_yuewen_237744751687158200.jpg) | [曾国藩传（张宏杰全新增补版）](app://obsidian.md/读书/历史/曾国藩传（张宏杰全新增补版）.md) | 张宏杰          |
-| ![img](https://cdn.weread.qq.com/weread/cover/46/3300016646/t7_3300016646.jpg) | [可能性的艺术：比较政治学30讲](app://obsidian.md/读书/政治军事/可能性的艺术：比较政治学30讲.md) | 刘瑜            |
-| ![img](https://wfqqreader-1252317822.image.myqcloud.com/cover/48/674048/t7_674048.jpg) | [邓小平时代](app://obsidian.md/读书/政治军事/邓小平时代.md)  | 傅高义          |
-| ![img](https://cdn.weread.qq.com/weread/cover/39/YueWen_635722/t7_YueWen_635722.jpg) | [史蒂夫·乔布斯传（修订版）](app://obsidian.md/读书/经济理财/史蒂夫·乔布斯传（修订版）.md) | 沃尔特·艾萨克森 |
+| ![img](https://cdn.weread.qq.com/weread/cover/37/cpplatform_gmaqcuuuamjkvu7knomjim/t7_cpplatform_gmaqcuuuamjkvu7knomjim1703077934.jpg) | [埃隆·马斯克传](app://obsidian.md/读书/人物传记/埃隆·马斯克传.md) | 沃尔特·艾萨克森        |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------- |
+| ![img](https://wfqqreader-1252317822.image.myqcloud.com/cover/694/38773694/t7_38773694.jpg) | [天生有罪（精装珍藏版）](app://obsidian.md/读书/人物传记/天生有罪（精装珍藏版）.md) | 特雷弗·诺亚            |
+| ![img](https://cdn.weread.qq.com/weread/cover/85/YueWen_856170/t7_YueWen_856170.jpg) | [富兰克林自传（经典译林）](app://obsidian.md/读书/人物传记/富兰克林自传（经典译林）.md) | 本杰明·富兰克林        |
+| ![img](https://wfqqreader-1252317822.image.myqcloud.com/cover/820/841820/t7_841820.jpg) | [苏东坡传（纪念典藏版）](app://obsidian.md/读书/人物传记/苏东坡传（纪念典藏版）.md) | 林语堂                 |
+| ![img](https://cdn.weread.qq.com/weread/cover/23/yuewen_23774475/t7_yuewen_237744751687158200.jpg) | [曾国藩传（张宏杰全新增补版）](app://obsidian.md/读书/历史/曾国藩传（张宏杰全新增补版）.md) | 张宏杰                 |
+| ![img](https://cdn.weread.qq.com/weread/cover/46/3300016646/t7_3300016646.jpg) | [可能性的艺术：比较政治学30讲](app://obsidian.md/读书/政治军事/可能性的艺术：比较政治学30讲.md) | 刘瑜                   |
+| ![img](https://wfqqreader-1252317822.image.myqcloud.com/cover/48/674048/t7_674048.jpg) | [邓小平时代](app://obsidian.md/读书/政治军事/邓小平时代.md)  | 傅高义                 |
+| ![img](https://res.weread.qq.com/wrepub/CB_A9ACwaCvp8i56iD6gZ5LZ0Cu_parsecover) | [凤凰架构：构建可靠的大型分布式系统](app://obsidian.md/读书/未分类/凤凰架构：构建可靠的大型分布式系统.md) | 周志明                 |
+| ![img](https://res.weread.qq.com/wrepub/CB_83F4O94KSEEp6iF6gj3FmC7W_parsecover) | [太白金星有点烦](app://obsidian.md/读书/未分类/太白金星有点烦.md) | 马伯庸                 |
+| ![img](https://res.weread.qq.com/wrepub/CB_Gb12kB2kk8Lv6kp6kfDPSEWL_parsecover) | [笔记的方法](app://obsidian.md/读书/未分类/笔记的方法.md)    | 刘少楠,刘白光          |
+| ![img](https://cdn.weread.qq.com/weread/cover/39/YueWen_635722/t7_YueWen_635722.jpg) | [史蒂夫·乔布斯传（修订版）](app://obsidian.md/读书/经济理财/史蒂夫·乔布斯传（修订版）.md) | 沃尔特·艾萨克森        |
+| ![img](https://cdn.weread.qq.com/weread/cover/31/YueWen_921791/t7_YueWen_921791.jpg) | [随机漫步的傻瓜](app://obsidian.md/读书/经济理财/随机漫步的傻瓜.md) | 纳西姆·尼古拉斯·塔勒布 |
