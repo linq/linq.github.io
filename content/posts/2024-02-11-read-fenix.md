@@ -10,7 +10,7 @@ extra:
   emoji: 📓
 ---
 
-![凤凰架构](https://icyfenix.cn/assets/img/book.85229ff1.png)
+![凤凰架构](https://res.weread.qq.com/wrepub/CB_A9ACwaCvp8i56iD6gZ5LZ0Cu_parsecover)
 
 这周把「[凤凰架构](https://book.douban.com/subject/35492898/)」看完，感觉应该是近期读过的关于架构方面最好的书了。
 
