@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh">
+    <title></title>
+    <link href="https://linq.github.io/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://linq.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-03-23T00:00:00+00:00</updated>
+    <id>https://linq.github.io/atom.xml</id>
+    <entry xml:lang="zh">
+        <title>程序员不在了吗</title>
+        <published>2024-03-23T00:00:00+00:00</published>
+        <updated>2024-03-23T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/programmer-future/" type="text/html"/>
+        <id>https://linq.github.io/posts/programmer-future/</id>
+        
+        <content type="html">&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;programmer-future&#x2F;cognition-lab-devin-software-engineer.webp&quot; alt=&quot;cognition lab devin software engineer&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;最近大模型的发展，尤其是首个 AI 程序员 Devin 公布后，网上关于程序员不存在的言论层出不穷。尤其是近期团队的一些同学也保持这种论调，而且是很悲观的认为很快就不需要会写代码的人。&lt;&#x2F;p&gt;
+&lt;p&gt;首先对于这个观点我持保守态度，不可否认大模型的发展很快，现在都已经能写出一定复杂度的代码。但是我们也应该看到的是，现在大模型写的代码能力还是比较初级的，基本是一些脚本，或者一些复杂度不高的功能。对于一个大型的信息系统，比如一个企业信息管理系统，我不认为在没有足够输入的情况下它能做到满足需求。而且这里存在的一个很大的问题是，写代码容易，如果我需要增加功能怎么办，最简单的是把整个代码逛给大模型，然后再通过一定的提示词让它来改吗，这里就涉及到一个很麻烦的问题，如何保证模型能按照你想要的方向来改代码，如何保证写出来的代码不会因为幻觉出现牛头不对马嘴。更重要的是，出错了怎么办，让模型自己改吗。&lt;&#x2F;p&gt;
+&lt;p&gt;其次是我认为大模型应该只是加速低级程序员的淘汰过程。我一直坚信技术是为业务服务的，技术也应该是从业务的快速发展需求中沉淀出来的，而不是闭门造车，或者低级的复制。对于有一定业务 sense 的程序员，他其实已经不只是在写代码，更是在通过技术方式将自己的领域知识转化成领域模型，完善产品设计。而对于看不到业务只埋头技术的程序员，只会简单的 CRUD 的程序员，我觉得被替代的可能性还是存在的。毕竟让大模型写出一个纯技术黑盒能用的代码还是不复杂的，大不了要加功能点的时候再生成一遍就好了。&lt;&#x2F;p&gt;
+&lt;p&gt;回到我的观点，大模型的发展对整个软件行业是有利的，想想以前遇到一个问题只能 Google，还可能遇到 CSDN 这种不靠谱的网站，现在一个简单的 prompt 再贴点提示信息差不多就能找到问题。而且大模型也加速了程序员学习技能的速度，以前学一个技术可能需要两三天，现在通过跟着大模型学习，可能小半天就能掌握个七七八八了。&lt;&#x2F;p&gt;
+&lt;p&gt;最重要的，我们不能做一个只会简单编码的人，技术需要服务业务，一个业务技术都擅长的架构师，又如何会怕 AI 踢掉自己的饭碗呢。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>iptables的表、链、规则</title>
+        <published>2024-03-16T00:00:00+00:00</published>
+        <updated>2024-03-16T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/iptables/" type="text/html"/>
+        <id>https://linq.github.io/posts/iptables/</id>
+        
+        <content type="html">&lt;p&gt;&lt;code&gt;iptables -t nat -I POSTROUTING -o eth0 -j MASQUERADE&lt;&#x2F;code&gt;
+首先我们解释下这条命令的功能，这条命令的作用是配置 &lt;code&gt;NAT&lt;&#x2F;code&gt;，以便所有通过 eth0 接口发送到网络的 IP 包都（伪装）修改它们的源 IP 地址。通常用于私有网络连接到互联网的情况，使得私有网络内的所有机器对外部网络只显示一个公共的 IP 地址。&lt;&#x2F;p&gt;
+&lt;p&gt;简单来看就是把当前设备当成路由器，把所有通过当前设备（eth0 网卡）转发出去的数据的源 IP 改写成当前设备的 IP。&lt;&#x2F;p&gt;
+&lt;p&gt;首先是这里的改写功能在命令的哪部分体现的？是 &lt;code&gt;-j MASQUERADE&lt;&#x2F;code&gt;，这里的 &lt;code&gt;MASQUERADE&lt;&#x2F;code&gt; 是 &lt;code&gt;iptables&lt;&#x2F;code&gt; 预置的行为之一，作用是自动的修改源或目标的 IP 来做 &lt;code&gt;NAT&lt;&#x2F;code&gt;。其它的常见行为还有：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;DROP&lt;&#x2F;strong&gt;：直接将数据包丢弃。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;REJECT&lt;&#x2F;strong&gt;：给客户端返回 Connection Refused 或 Destination Unreachable 报文。 &lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;QUEUE&lt;&#x2F;strong&gt;：将数据包放入用户空间的队列，供用户空间的程序处理。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;RETURN&lt;&#x2F;strong&gt;：跳出当前链，该链里后续的规则不再执行。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;ACCEPT&lt;&#x2F;strong&gt;：同意数据包通过，继续执行后续的规则。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;JUMP&lt;&#x2F;strong&gt;：跳转到其他用户自定义的链继续执行。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;REDIRECT&lt;&#x2F;strong&gt;：在本机做端口映射。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;MASQUERADE&lt;&#x2F;strong&gt;：地址伪装，自动用修改源或目标的 IP 地址来做 NAT。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;LOG&lt;&#x2F;strong&gt;：在&#x2F;var&#x2F;log&#x2F;messages 文件中记录日志信息。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;iptables 所有的命令最终是要执行上面的行为。&lt;&#x2F;p&gt;
+&lt;p&gt;然后再看下前面的参数 &lt;code&gt;-o eth0&lt;&#x2F;code&gt;，这个选项指定只有通过 &lt;code&gt;eth0&lt;&#x2F;code&gt; 网卡离开本机的数据包生效。相对于对后面执行的行为有一个限定条件，而这个条件➕行为就组成了 iptables 的规则。&lt;&#x2F;p&gt;
+&lt;p&gt;iptables 中每条规则都包含了一组匹配条件和一个动作（称为“目标“）。当数据包在链上的流程中和规则的匹配条件相符时，将对其执行规定的动作，如接受（&lt;code&gt;ACCEPT&lt;&#x2F;code&gt;）、拒绝（&lt;code&gt;REJECT&lt;&#x2F;code&gt;）、丢弃（&lt;code&gt;DROP&lt;&#x2F;code&gt;）、转发（&lt;code&gt;FORWARD&lt;&#x2F;code&gt;）等。简单来理解规则就是 &lt;code&gt;if 满足 xxx 条件, then 执行 yyy 行为&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;然后在往前看 &lt;code&gt;-I POSTROUTING&lt;&#x2F;code&gt;，这里的 &lt;code&gt;POSTROUTING&lt;&#x2F;code&gt; 是 &lt;code&gt;iptables&lt;&#x2F;code&gt; 的一个链，什么是链呢，可以认为就是 &lt;code&gt;iptables&lt;&#x2F;code&gt; 中的规则的有序集合。&lt;code&gt;iptables&lt;&#x2F;code&gt; 已经提前定义好多个内置的链，我们要做的是把规则放到链中。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;iptables&lt;&#x2F;code&gt; 预定义了 5 个链，这些链就代表数据包在网络栈中经过的不同点。&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;PREROUTING&lt;&#x2F;strong&gt;：处理进入网络接口但还未被路由选择的数据包&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;INPUT&lt;&#x2F;strong&gt;：处理即将送往本地进程的数据包&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;FORWARD&lt;&#x2F;strong&gt;：处理经过本机（当前的Linux系统）正在路由到其他目的地的所有数据包&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;OUTPUT&lt;&#x2F;strong&gt;：处理本地产生要发送出去的数据包&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;POSTROUTING&lt;&#x2F;strong&gt;：处理即将离开本机的所有数据包，并且处理发生在路由决策之后&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;所以我们的命令是把规则加入到 &lt;code&gt;POSTROUTING&lt;&#x2F;code&gt; 中，也就是在数据包即将离开本机的时候处理。&lt;&#x2F;p&gt;
+&lt;p&gt;最后来看下 &lt;code&gt;-t nat&lt;&#x2F;code&gt;，这里指定了 iptables 的 nat 表，那什么是表呢，我们可以认为 iptables 的表就是链的分类集合，通常根据处理数据包的阶段或者目的进行分类。常见的表有 filter（用于过滤数据包），nat（用于网络地址转换），mangle（用于特殊的包处理），和 raw（用于决定数据包是否会被状态跟踪）。&lt;&#x2F;p&gt;
+&lt;p&gt;这里可能会有个疑问，貌似通过规则、链好像能实现基本的数据包处理了，为什么还要引入表呢？这里其实是为了管理方便，想象下如果只有链，我需要对发送出去的数据包做不同的处理，那可能就是在一个 OUTPUT 链中有维护 n 条处理规则，到后期维护成本就会很高。而通过 &lt;code&gt;iptables&lt;&#x2F;code&gt; 预分类好的表，我们根据处理阶段就知道应该添加到哪张表中，整个规则的维护都会更加的清晰和高效。&lt;&#x2F;p&gt;
+&lt;p&gt;来总结下 &lt;code&gt;iptables&lt;&#x2F;code&gt; 中表、链、规则的关系，表是链的分类集合，内部包括链；而链是规则的有序集合，内部包括规则。&lt;&#x2F;p&gt;
+&lt;p&gt;最后我们再来看下 &lt;code&gt;iptables&lt;&#x2F;code&gt; 是什么，&lt;code&gt;iptables&lt;&#x2F;code&gt; 是 &lt;code&gt;Linux&lt;&#x2F;code&gt; 提供的一个命令行工具，主要用于配置内核提供的 &lt;code&gt;netfilter&lt;&#x2F;code&gt; 防火墙功能。也就是说 &lt;code&gt;iptables&lt;&#x2F;code&gt; 只是一个配置工具，底层核心能力其实都是 &lt;code&gt;netfilter&lt;&#x2F;code&gt; 来实现的，包括核心的预定义链其实都是关联 &lt;code&gt;netfilter&lt;&#x2F;code&gt; 的五个同名钩子。不过 &lt;code&gt;netfilter&lt;&#x2F;code&gt; 要通过程序编码才够能使用，并不适合系统管理员用来日常运维，而 &lt;code&gt;iptables&lt;&#x2F;code&gt; 的价值就是以配置去实现原本用 &lt;code&gt;netfilter&lt;&#x2F;code&gt; 编码才能做到的事情。&lt;&#x2F;p&gt;
+&lt;p&gt;最后贴下网络栈中 netfilter 5 个钩子的流程。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;iptables&#x2F;netfilter-hook.webp&quot; alt=&quot;netfilter hooks&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;www.liuvv.com&#x2F;p&#x2F;a8480986.html&quot;&gt;参考&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>使用rclone备份知识库</title>
+        <published>2024-03-10T00:00:00+00:00</published>
+        <updated>2024-03-10T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/rclone-backup-knowledge/" type="text/html"/>
+        <id>https://linq.github.io/posts/rclone-backup-knowledge/</id>
+        
+        <content type="html">&lt;p&gt;一直使用 &lt;code&gt;Obsidian&lt;&#x2F;code&gt; 管理个人的知识库，然后配合 &lt;code&gt;syncthing&lt;&#x2F;code&gt; 进行多台设置之间的同步。近期同步的时候发现整个知识库的文件大小已经达到 2GB，对于如此核心的资产，貌似容灾做的很不够。&lt;&#x2F;p&gt;
+&lt;p&gt;现在的核心数据是存放在 N1 小 NAS 上挂载的移动硬盘上，然后通过 Syncthing 同步到家里的电脑和公司的电脑上，暂且可以认为有 3 个备份。这里有两个痛点，首先服务器上的数据是在移动硬盘上的，感觉不是很保险，如果什么时候突然出现故障，估计数据要找回是个很大的问题。然后就是两台电脑上的数据只是为了写作用，不会时刻跟服务器上保持同步，一般是写完一些内容提交下，可能会有 1 到 2 天的延迟。&lt;&#x2F;p&gt;
+&lt;p&gt;在考虑好要做备份后，我首先想到的就是同步到云盘，毕竟本地虽然方便，但是要自己做好数据保护，放到云上就可以让对应的服务商帮你搞定这一切。云盘第一个想到的就是自己用的比较多的阿里云盘，另外是国内能正常访问的 &lt;code&gt;onedrive&lt;&#x2F;code&gt;。定好存储后就是如何同步上去，网上搜了下后大致确认使用 &lt;code&gt;rclone&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;初步写了个脚本实现定时同步。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;#!&amp;#x2F;bin&amp;#x2F;sh
+
+# Define the source and destination
+SOURCE=&amp;quot;&amp;#x2F;backup&amp;quot;
+DESTINATION=&amp;quot;:&amp;#x2F;Backup&amp;quot;
+
+# Define the list of flags
+providers=&amp;quot;aliyun onedrive&amp;quot;
+
+# Infinite loop
+while true; do
+	for provider in $providers; do
+		# Record the start time of the synchronization
+		echo &amp;quot;[$provider] Sync started at $(date)&amp;quot;
+
+		# Run rclone command
+		rclone -v --config &amp;#x2F;data&amp;#x2F;rclone.conf sync &amp;quot;$SOURCE&amp;quot; &amp;quot;$provider$DESTINATION&amp;quot; --exclude-from exclude-file.txt
+
+		# Record the end time of the synchronization
+		echo &amp;quot;[$provider] Sync completed at $(date)&amp;quot;
+	done
+
+	# Sleep for 10 minutes
+	sleep 600
+done
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;不过在跑了一个晚上后发现一个很大的问题，阿里云盘竟然每次都跑的时候都会同步。然后去翻 &lt;code&gt;rclone&lt;&#x2F;code&gt; 的官方文档，发现是 &lt;code&gt;Webdav&lt;&#x2F;code&gt; 协议本身不支持将文件的元数据同步到服务端。不过 &lt;code&gt;rclone&lt;&#x2F;code&gt; 做了扩展，可以通过 &lt;code&gt;X-OC-Mtime&lt;&#x2F;code&gt; 头来支持，但是需要 &lt;code&gt;Webdav&lt;&#x2F;code&gt; 服务商能识别该 header。然后我去 &lt;code&gt;Alist&lt;&#x2F;code&gt; 的 GitHub 找 issues，没想到还真兼容，但是我在修改 &lt;code&gt;Webdav&lt;&#x2F;code&gt; 服务器和 &lt;code&gt;rclone&lt;&#x2F;code&gt; 的 vender 之后，发现还是一样的问题。然后再去确认，发现阿里云盘竟然又&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;alist-org&#x2F;alist&#x2F;issues&#x2F;4938&quot;&gt;不支持&lt;&#x2F;a&gt;了😂。&lt;&#x2F;p&gt;
+&lt;p&gt;没办法放弃阿里云盘，但是觉得一家不保险，就考虑加个 Google Drive 吧，考虑到 Google Drive 需要魔法上网，把脚本改成可以配置的方式。同时觉得一直傻轮询的方式很蠢，网上找了个 rust 的 watchexec 来监控文件变化，有变更的时候再执行脚本，基本实现了自己的需求。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;#!&amp;#x2F;bin&amp;#x2F;sh
+
+# Proxy 配置
+PROXY=&amp;quot;http:&amp;#x2F;&amp;#x2F;xx:xx@127.0.0.1:5678&amp;quot; # 请替换成你的代理服务器和端口
+
+# provider 配置，格式为：&amp;quot;provider_name=true|false&amp;quot;
+PROVIDERS=&amp;quot;onedrive=false
+gdrive=true&amp;quot;
+
+log() {
+        echo &amp;quot;$(date &amp;#x27;+%Y&amp;#x2F;%m&amp;#x2F;%d %H:%M:%S&amp;#x27;) INFO  : $1&amp;quot;
+}
+
+setup_proxy() {
+        export http_proxy=$PROXY
+        export https_proxy=$PROXY
+        log &amp;quot;Enable Proxy for $1.&amp;quot;
+}
+
+unset_proxy() {
+        unset http_proxy
+        unset https_proxy
+        log &amp;quot;Disable Proxy for $1.&amp;quot;
+}
+
+rclone_command() {
+        provider=$1
+        # 这里应该是你要执行的rclone命令
+        log &amp;quot;Start rclone for provider: $provider&amp;quot;
+        # 此处添加你的rclone命令，例如：
+        rclone -v --config &amp;#x2F;data&amp;#x2F;rclone.conf sync &amp;quot;&amp;#x2F;backup&amp;quot; &amp;quot;$provider:&amp;#x2F;Backup&amp;quot; --exclude-from &amp;#x2F;data&amp;#x2F;exclude-file.txt
+        log &amp;quot;Finish rclone for provider: $provider&amp;quot;
+}
+
+# 读取并处理每一个provider的配置
+echo &amp;quot;$PROVIDERS&amp;quot; | while IFS=&amp;#x27;=&amp;#x27; read -r provider proxy_enabled; do
+        if [ &amp;quot;$proxy_enabled&amp;quot; = &amp;quot;true&amp;quot; ]; then
+                setup_proxy &amp;quot;$provider&amp;quot;
+                rclone_command &amp;quot;$provider&amp;quot;
+                unset_proxy &amp;quot;$provider&amp;quot;
+        else
+                rclone_command &amp;quot;$provider&amp;quot;
+        fi
+        log &amp;quot;---------------------------------------&amp;quot;
+done
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;以上的脚本基本实现了想要的功能，不过在了解 watchexec 之后，我发现 watchexec 原来可以将变更文件输出，这样其实配合 rclone 的 &lt;code&gt;--filter-from&lt;&#x2F;code&gt; 参数其实是可以实现客户端的增量同步的，也就能解决 webdav 的每次都同步问题。不过这个脚本得配合着一些改动，况且感觉现在也够用了，后续有新的需求的时候再考虑修改下。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>同步Flomo卡片到markdown</title>
+        <published>2024-03-03T00:00:00+00:00</published>
+        <updated>2024-03-03T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/flomo-sync/" type="text/html"/>
+        <id>https://linq.github.io/posts/flomo-sync/</id>
+        
+        <content type="html">&lt;p&gt;年初开始了解到 Flomo，尝试注册了个账号并试用了下。开始的感触是功能怎么这么少，就一个简单的输入框，而且文本格式选项支持的也不多。抱着这么简单随便用下也没什么成本的想法，把自己一些简单的事项记录到上面。包括一些简单的 todo list，或者临时想到的内容。&lt;&#x2F;p&gt;
+&lt;p&gt;偶尔在使用 Flomo 的时候会想，这么简单的工具有什么特别的亮点吗，感觉随便一个工具都能秒杀它。不说全能的 Notion、Obsidian，即使相比很简单的滴答清单、Microsoft To Do 感觉也没什么优势。有次正好通过 Flomo 的消息看到官方的帮助文档，也就是 flomo 101。但是看到笔记的方法时有一点小惊讶，没想到还教你怎么记笔记。&lt;&#x2F;p&gt;
+&lt;p&gt;不过这个是正好击中我的兴趣点，我一直想优化自己的笔记方式。虽然现在通过 Obsidian 记录了不少东西，但是感觉没有体系很凌乱。之前也整理过几次结构，但是感觉效果也不咋样。网上也看到了一些教程，感觉都太复杂了也就没继续。简单看了笔记方法的内容后，感觉里面卡片笔记挺有实操性的，而且对于记录哪些内容也有一些指导。通过里面引导，我发现作者竟然还出了本书《笔记的方法》，然后一发不可收拾的，又去看书。&lt;&#x2F;p&gt;
+&lt;p&gt;到现在也用 Flomo 零零散散记了 130 多张卡片，主要还是一些零散的内容，大块的笔记还是通过 Obsidian，并且 Flomo 的内容经过整理后，我还是会转移到 Obsidian 中。不过一直有一个痛点，Flomo 的笔记只能通过它的 APP 或者通过网页查看，我平时还是习惯使用 Obsidian 作为个人的知识中心，就想着是否可以将 Flomo 同步到 Obsidian 中。&lt;&#x2F;p&gt;
+&lt;p&gt;期间也找了一些 Obsidian 插件，发现主要的实现都是通过 Flomo 官网离线导出，然后再导入到 Obsidian 中。这里的问题是 Flomo 7 天只能导出一次，而且导入的笔记格式跟我想要的不是很一致。搜索的时候发现 GitHub 上有 Python 代码可以使用官方 API 导出卡片数据，就萌生了自己写个脚本同步到 Obsidian 的想法。&lt;&#x2F;p&gt;
+&lt;p&gt;正好乘着年底事情不太多，通过 ChatGPT 实现了一个简单的全量同步脚本。这个脚本已经差不多实现我当初想要的同步功能，不错一些不足，首先是只能全量同步，每次都需要删除之前的数据。另外是代码写的有够烂，心里总感觉不爽。在年后回来后，又花了些时间重构了下。现在能支持增量同步，包括更新、删除的卡片数据，也避免给 Flomo 的服务器造成太大压力。代码也根据笔记作为模块划分，相对清爽一些，虽然感觉还是一坨😂。&lt;&#x2F;p&gt;
+&lt;p&gt;同步效果：
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;flomo-sync&#x2F;flomo-sync.webp&quot; alt=&quot;flomo卡片效果&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;脚本的使用方式：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;usage: main.py [-h] dir_path auth
+
+Sync flomo to markdown
+
+positional arguments:
+  dir_path    The markdown directory path
+  auth        The Flomo authorization
+
+options:
+  -h, --help  show this help message and exit
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;脚本有两个参数，第一个是需要同步的目标文件夹，会在指定的文件夹中创建一个 flomo 子文件夹，然后根据时间同步对应的笔记，还会创建一个 tags 文件夹，里面同步所有的标签，标签会通过嵌入连接的方式引用笔记。&lt;&#x2F;p&gt;
+&lt;p&gt;目录结构：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;flomo
+├─ 2024
+│    ├─ 01
+│    │    ├─ 2024-01-15.md
+│    ├─ 02
+│    └─ 03
+├─ flomo.md
+└─ tags
+       ├─ 项目.md
+       └─ 领域.md
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;同时为了方便使用，做了一个简单的 Alfred Workflow，用于一键同步。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;linq&#x2F;flomo-sync&quot;&gt;flomo-sync&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>OpenWrt Docker软路由</title>
+        <published>2024-02-21T00:00:00+00:00</published>
+        <updated>2024-02-21T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/openwrt/" type="text/html"/>
+        <id>https://linq.github.io/posts/openwrt/</id>
+        
+        <content type="html">&lt;p&gt;半年前用 N1 配合 OpenWrt 搭建了软路由，也稳定运行了半年。这周心血来潮想折腾其他的上网方式，把 OpenWrt 软路由升级了下，中间的步骤也不少，正好记录下。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;docker-zhun-bei&quot;&gt;Docker 准备&lt;&#x2F;h2&gt;
+&lt;p&gt;首先是 docker 环境准备，这个现在一般 NAS 啥的都自带，我用的 &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ophub&#x2F;amlogic-s9xxx-armbian&#x2F;tree&#x2F;main&quot;&gt;Armbian&lt;&#x2F;a&gt; 也是，除了修改下镜像加速也没啥改动。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;daemon.json&lt;&#x2F;code&gt; 增加 registry-mirrors&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  &amp;quot;registry-mirrors&amp;quot;: [
+    &amp;quot;https:&amp;#x2F;&amp;#x2F;dockerproxy.com&amp;quot;
+  ]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;wang-luo-zhun-bei&quot;&gt;网络准备&lt;&#x2F;h2&gt;
+&lt;p&gt;打开网卡混杂模式&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo ip link set eth0 promisc on
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;创建 macvlan 虚拟网卡&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;docker network create -d macvlan --subnet=192.168.xxx.0&amp;#x2F;24 --gateway=192.168.xxx.yyy -o parent=eth0 macnet
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;openwrt-jing-xiang-zhun-bei&quot;&gt;OpenWrt 镜像准备&lt;&#x2F;h2&gt;
+&lt;p&gt;这里推荐两个：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;hub.docker.com&#x2F;r&#x2F;ophub&#x2F;openwrt-aarch64&quot;&gt;ophub&#x2F;openwrt-aarch64&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;hub.docker.com&#x2F;r&#x2F;piaoyizy&#x2F;openwrt-aarch64&quot;&gt;piaoyizy&#x2F;openwrt-aarch64&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;如果要清爽干净可是使用第一个，如果有魔法上网需求选择第二个，使用上都没有区别&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;qi-dong-openwrt-bing-pei-zhi-wang-luo&quot;&gt;启动 OpenWrt 并配置网络&lt;&#x2F;h2&gt;
+&lt;p&gt;首先启动容器&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;docker run -d --name=openwrt --network macnet --privileged --restart always ophub&amp;#x2F;openwrt-aarch64:latest
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;进入 OpenWrt&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;docker exec -it openwrt bash
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;修改 IP、网关、DNS 等&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;vi &amp;#x2F;etc&amp;#x2F;config&amp;#x2F;network
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;修改完重启 OpenWrt 网络&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&amp;#x2F;etc&amp;#x2F;init.d&amp;#x2F;network restart
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;ruan-lu-you-she-zhi&quot;&gt;软路由设置&lt;&#x2F;h2&gt;
+&lt;p&gt;上面执行完成后就可以通过 ip 登陆软路由，输入密码后进行相关的设置。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;lan-jie-kou-she-zhi&quot;&gt;LAN 接口设置&lt;&#x2F;h3&gt;
+&lt;p&gt;进入 &lt;code&gt;网络 - 接口 - LAN&lt;&#x2F;code&gt;，执行以下修改&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;关闭 DHCP&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;IPv4 网关&lt;&#x2F;code&gt;和 &lt;code&gt;DNS 服务器&lt;&#x2F;code&gt;都填写主路由地址&lt;&#x2F;li&gt;
+&lt;li&gt;在&lt;code&gt;物理设置&lt;&#x2F;code&gt;中，取消&lt;code&gt;桥接接口&lt;&#x2F;code&gt;选项&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h3 id=&quot;fang-huo-qiang-she-zhi&quot;&gt;防火墙设置&lt;&#x2F;h3&gt;
+&lt;p&gt;进入 &lt;code&gt;网络 - 防火墙 - 自定义规则&lt;&#x2F;code&gt;，添加&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;iptables -t nat -I POSTROUTING -o eth0 -j MASQUERADE
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;修改后重启防火墙&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;armbian-she-zhi-ke-xuan&quot;&gt;Armbian 设置 (可选)&lt;&#x2F;h2&gt;
+&lt;p&gt;对于使用 Armbian，实现和 OpenWrt 互相访问
+修改 &lt;code&gt;&#x2F;etc&#x2F;network&#x2F;interfaces&lt;&#x2F;code&gt;，增加&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;auto macvlan
+iface macvlan inet dhcp
+        pre-up ip link add macvlan link eth0 type macvlan mode bridge
+        post-down ip link del macvlan link eth0 type macvlan mode bridge
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;openclash-she-zhi&quot;&gt;OpenClash 设置&lt;&#x2F;h2&gt;
+&lt;p&gt;对于需要 OpenClash 魔法上网的，首次添加订阅大概率无法启动。查看日志会发现是因为 clash 内核无法下载，所以需要先下载内核。&lt;&#x2F;p&gt;
+&lt;p&gt;进入 &lt;code&gt;OpenClash - 插件设置 - 版本更新&lt;&#x2F;code&gt;，在 Dev 内核中点击下载，可以把内核先下载到本地。&lt;&#x2F;p&gt;
+&lt;p&gt;ssh 登陆 OpenClash 并上传 clash 内核到 &lt;code&gt;&#x2F;etc&#x2F;openclash&#x2F;core&lt;&#x2F;code&gt;，可能会没有文件夹记得创建，然后修改文件权限&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;chmod 0700 clash  
+chown nobody:nogroup clash
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;修改后重启 OpenClash 应该就可以了&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>2024春节京都大阪行</title>
+        <published>2024-02-19T00:00:00+00:00</published>
+        <updated>2024-02-19T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/kyoto-osaka/" type="text/html"/>
+        <id>https://linq.github.io/posts/kyoto-osaka/</id>
+        
+        <content type="html">&lt;p&gt;距离上次去日本有5年了，上次是大阪东京两地的行程，总体上有点赶，这次准备轻松一点，就选择了关西休闲游。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;di-yi-tian&quot;&gt;第一天&lt;&#x2F;h3&gt;
+&lt;p&gt;13号中午12点左右到的大阪国际机场✈️，出关的时候看到巡逻的小姐姐牵着一条小黄狗非常的可爱，完全不像映象中的黑色衣服+黑色犬的组合。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_9659.webp&quot; alt=&quot;安检小狗&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;我们前两天的行程在京都，所以出了安检直接乘获取去京都，老婆很喜欢Hello Kitty，还特意定了HARUKA专线，不过感觉里面也没啥区别，就是多了一些Hello Kitty的元素。
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_9662.webp&quot; alt=&quot;HARUKA专线&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;到了京都火车站后，我们转公交去酒店。其中有个小插曲是我们忘了提前换零钱，然后公交🚌不能找零，还好旁边的中国小姐姐提醒可以通过Apple Pay的Suica卡支付，临时配置了下Apple Pay才搞定。&lt;&#x2F;p&gt;
+&lt;p&gt;酒店入住后差不多3点多了，两个人都有点肚子饿就去酒店旁边逛逛，然后找到一家所谓的6年老店的拉面店，味道非常的不咋的，搞的我们后来都不敢相信大众点评了。&lt;&#x2F;p&gt;
+&lt;p&gt;我们酒店定在了祗园附近，正好离八坂神社和三年二班近，趁着天黑前去逛了下。八坂神社还是挺有日式风格的神社⛩️，三年二版人实在太多，而且还是上坡路，两个人实在走不动晚上就回了。
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_9747.webp&quot; alt=&quot;八坂神社&quot; &#x2F;&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_9715.webp&quot; alt=&quot;八坂神社&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;di-er-tian&quot;&gt;第二天&lt;&#x2F;h3&gt;
+&lt;p&gt;因为上次没去金阁寺和二条城，第二天就专门安排了这两个地方。金阁寺还是一如既往的好看，这次可能来的比较早，人不是很多，可以随意的逛拍。
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0053.webp&quot; alt=&quot;金阁寺&quot; &#x2F;&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_9975.webp&quot; alt=&quot;金阁寺&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;二条城很大，分成了好几个区域。中庭内部的设计挺有意思的，脚踩上去有鸟叫声。其他主要是一些庭院就没有太多意思了。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0060.webp&quot; alt=&quot;二条城&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;二条城逛完还有挺多时间，就去京都的锦市场逛逛，感觉跟心斋桥差不多，但是吃的东西会多点。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0122.webp&quot; alt=&quot;锦市场&quot; &#x2F;&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0127.webp&quot; alt=&quot;锦市场&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;逛完锦市场差不多到傍晚，我们就沿着路线回酒店，路线正好经过鸭川，买了点吃的在鸭川边坐了一个多小时。坐在河边看着湍急的河流，喝着啤酒🍺感觉很放松😌。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0174.webp&quot; alt=&quot;鸭川&quot; &#x2F;&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0176.webp&quot; alt=&quot;鸭川&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;回去天已经暗了，正好去酒店边的祗园逛下，原以为祗园应该会很热闹，没想到就是一条普通的小街道，有点小失望。还好运气比较好在往回走的路上看到一个艺妓小姑娘。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0179.webp&quot; alt=&quot;祗园艺妓&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;di-san-tian&quot;&gt;第三天&lt;&#x2F;h3&gt;
+&lt;p&gt;15号早上退房坐火车去大阪，火车还挺快的一个小时不到就到了，快速办理入住后，就去心斋桥打卡了。10多年了心斋桥还是一样，感觉也没啥新东西，简单逛逛就走了。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0209.webp&quot; alt=&quot;心斋桥&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;大阪真的没啥景点，接下来也不知道要干啥了。老婆在小红书翻到附近有个难波八坂神社，乘着关门前去打卡了下。感觉有点小失望，除了正面可以拍下照就没了。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0214.webp&quot; alt=&quot;难波八坂神社&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;di-si-tian&quot;&gt;第四天&lt;&#x2F;h3&gt;
+&lt;p&gt;按照行程16号要去大阪环球影城玩，我们早上6点半就起来，赶到环球影城门口正好7点40左右，排了差不多20分钟终于进入园区。&lt;&#x2F;p&gt;
+&lt;p&gt;我们一进入园区马上抢了超级任天堂世界的整理券，然后直冲哈利波特禁忌之旅，据说是很热门的项目，老婆之前在北京环球影城都没排到，还好去的早排了15分钟就玩上了。感觉跟迪士尼的飞跃地平线差不多，不过交互的东西多一点，感觉还是挺不错的。&lt;&#x2F;p&gt;
+&lt;p&gt;出来后直奔飞天翼龙，排队30分钟左右玩到。这个项目是真的刺激，360度旋转过山车🎢，玩之前还有点小害怕，玩完之后感觉非常的嗨。&lt;&#x2F;p&gt;
+&lt;p&gt;出来后差不多9点多，我们的超级任天堂整理券的时间也到了，就直接过去了。任天堂世界怎么说呢，非常的好拍，但是里面的项目感觉不算太有意思。我们排了马里奥卡丁车和耀西的冒险，平均50分钟左右，但是都是偏儿童的项目感觉不算太有意思。如果不是有马里奥的童年加成，估计更不值。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0250.webp&quot; alt=&quot;超级任天堂世界&quot; &#x2F;&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0281.webp&quot; alt=&quot;奇诺比奥&quot; &#x2F;&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0339.webp&quot; alt=&quot;马里奥兄弟&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;任天堂世界出来后还排了好莱坞美梦乘车游过山车，这个排的时间有点长差不多1个多小时，但是就玩了1分钟不到，感觉有点不值。后面就挑了几个小项目玩，但是平均也要20分钟的排队。到差不多1点半的时候，我们就去等花车游行，等了差不多半小时终于出来。感觉比起迪斯尼的花车游行排场小很多，而且貌似只有30分钟不到。&lt;&#x2F;p&gt;
+&lt;p&gt;看完花车我们感觉也没啥好玩的了，主要也是不想排队，然后就回市区去梅田逛。梅田主要是商场，逛了1个多小时肚子也饿了，找了个网红的拉面店银座篝，据说是米其林一星的店，平时排队的人很多。还好我们去的时候正好有位置，我点了招牌的鸡汤面，味道的确是不错，可能是我吃过最好吃的拉面了。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0432.webp&quot; alt=&quot;银座篝&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;di-wu-tian&quot;&gt;第五天&lt;&#x2F;h3&gt;
+&lt;p&gt;17号的行程是奈良一日游，早上吃完早饭后直接坐火车去奈良。奈良景点不算多，主要还是去公园看小鹿。我们10左右到的公园，在公园边买了鹿饼后，小鹿马上就围了上来，非常的热切一直追着我们，把我们两个给吓坏了。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0446.webp&quot; alt=&quot;奈良小鹿&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;没办法我们只能打游击战，在一个地方喂完小鹿后，马上跑开，不然一堆鹿围上来可太慌了。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0486.webp&quot; alt=&quot;奈良小鹿&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;奈良的景点比较集中，喂完小鹿后我们就去周边的寺庙逛逛，包括东大寺、春日神社，两个寺庙都比较大，整个逛完也到下午3点左右了。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0661.webp&quot; alt=&quot;东大寺&quot; &#x2F;&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0780.webp&quot; alt=&quot;春日神社&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;在去春日神社的途中经过一个网红打卡点，老婆点了份招牌的乌冬面和抹茶🍵。我还是第一次喝原味的抹茶，原以为会跟抹茶冰淇淋一样的甜，没想道很苦。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;kyoto-osaka&#x2F;IMG_0763.webp&quot; alt=&quot;抹茶&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;逛完后老婆想在回去前再去看看可爱的小鹿，我们就再去了一次奈良公园。但是这次去小鹿明显少了很多，而且可能是因为吃饱了小鹿非常的挑食，送到嘴边的鹿饼都不一定肯吃。也亏得我们早上来的早，不然看到这么无精打采的效率我们估计会很郁闷。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;di-liu-tian&quot;&gt;第六天&lt;&#x2F;h3&gt;
+&lt;p&gt;18号回国，因为是中午12点的飞机，老婆还要去机场买点东西，早上吃完早饭直接去机场。中途有个小插曲，机场大巴在梅田，但是梅田站太大了，我们绕了一大圈中途问了好几个人才找到，搞的都郁闷了。&lt;&#x2F;p&gt;
+&lt;p&gt;这次的回国航班的小惊喜是飞机餐，国航的飞机餐还挺丰盛的，不仅有肥牛饭、鸡肉饭可以选，还有小食，水果，甜点是鲷鱼烧，吃的非常的满足。&lt;&#x2F;p&gt;
+&lt;p&gt;下午2点到杭州，中途过安检的时候竟然被拉过去做核酸，搞的心情都不好，也不知道政府咋想的。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zong-jie&quot;&gt;总结&lt;&#x2F;h3&gt;
+&lt;p&gt;总结下这次行程，整体上还是满意的，其中的惊喜是奈良一日游，还有京都的鸭川。不足是日本的食物，感觉除了拉面没吃到啥太好吃的，17号晚上吃了一家类似大排档的店感觉味道还行，但是也没啥太多惊喜。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>读凤凰架构</title>
+        <published>2024-02-11T00:00:00+00:00</published>
+        <updated>2024-02-11T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/read-fenix/" type="text/html"/>
+        <id>https://linq.github.io/posts/read-fenix/</id>
+        
+        <content type="html">&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;res.weread.qq.com&#x2F;wrepub&#x2F;CB_A9ACwaCvp8i56iD6gZ5LZ0Cu_parsecover&quot; alt=&quot;凤凰架构&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;这周把「&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;book.douban.com&#x2F;subject&#x2F;35492898&#x2F;&quot;&gt;凤凰架构&lt;&#x2F;a&gt;」看完，感觉应该是近期读过的关于架构方面最好的书了。&lt;&#x2F;p&gt;
+&lt;p&gt;主要几个方便让我觉得挺不错：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;文笔，&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;book.douban.com&#x2F;search&#x2F;%E5%91%A8%E5%BF%97%E6%98%8E&quot;&gt;周志明&lt;&#x2F;a&gt;老师的文笔真的没话说，复杂的概念也能讲的简单易懂，完全没有普通架构书的死板，有时候还能有一些网络用语感觉非常的接地气&lt;&#x2F;li&gt;
+&lt;li&gt;相关技术架构的发展历史，能把一项技术的前因后果讲清楚，也更容易读者的理解和学习，人都是有好奇心（八卦）的，多了解一点也更容易记住&lt;&#x2F;li&gt;
+&lt;li&gt;凤凰架构的观点，比如：系统每一个部件都可以看作是一只不死鸟（Phoenix），都能涅槃重生；架构演变是为了方便某个服务能够顺利地“死去”与“重生”而设计，这些观点都能让启发思考，而不是千篇一律&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;其实感觉这本书有点被书名耽搁了，挺早之前就被安利过，但是当时看到这个名字就觉得很俗气，心里有个大概判断就没继续了。后来应该是在极客时间看到了「周志明的软件架构课」，发现讲的就是「凤凰架构」，然后大概去豆瓣搜了下，貌似评分还挺好的，才有后来的继续阅读。现在再看凤凰两个字，的确像周志明老师在书中说的，这个词东方人不常用，但是在西方的软件工程读物是比较多出现的。&lt;&#x2F;p&gt;
+&lt;p&gt;我觉得这本书比较好的一点是把软件架构的很多的技术都统一梳理了一下，包括RPC，分布式事务，容器编排等，可能不是那么的细，但是对于一个想了解架构但是不知如何下手的人来说，是一本非常好的入门参考书。在整体了解的基础上，对于其中一些感觉不熟悉，或者想深入了解的，可以作为一个引子，再找一些相关资料补充，对于掌握相关的技术应该也是有很大的益处的。&lt;&#x2F;p&gt;
+&lt;p&gt;现在第一遍看完有点意犹未尽，主要是感觉自己在被动接收观点，没有跟周志明老师讨论的机会，在发现凤凰架构有一个&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;icyfenix.cn&#x2F;&quot;&gt;官方网站&lt;&#x2F;a&gt;后，我准备再走读一边，也结合极客时间的「周志明的软件架构课」，主要想看看里面的评论，或者自己也参与一起讨论，想更有参考感的一起学习，希望能有更多的收获。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>Obsidian制作Anki卡片</title>
+        <published>2024-02-04T00:00:00+00:00</published>
+        <updated>2024-02-04T00:00:00+00:00</updated>
+        <author>
+          <name>fancylinq</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/markdown-to-anki/" type="text/html"/>
+        <id>https://linq.github.io/posts/markdown-to-anki/</id>
+        
+        <content type="html">&lt;p&gt;近期一直在用Anki几点东西，但是Anki制卡的过程太繁琐，之前一直在用Obsidian仓库的 &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ObsidianToAnki&#x2F;Obsidian_to_Anki&quot;&gt;Obsidian_to_Anki&lt;&#x2F;a&gt;制卡，整体上还是不错的，但是也有几个让人不太满意的地方。&lt;&#x2F;p&gt;
+&lt;p&gt;一是 Obsidian_to_Anki 每次同步是整个Vault全量扫描同步，这个如果笔记多就会很慢。为了解决这个问题，我专门开了一个 Anki的Vault出来算是勉强绕过去。但实际情况是即使单独的Vault，如果卡片笔记足够多每次同步还是很慢。&lt;&#x2F;p&gt;
+&lt;p&gt;第二个问题就是有些卡片同步不了，这个是真的让我想自己折腾的直接原因。也不知道啥原因同样的制卡笔记，有时候同步不了，但是下一次可能又行了，还有一些是怎么折腾都同步不了。这个是真的搞的我很不爽，为了搞定这个还专门把 Obsidian_to_Anki 的源码翻了下也没看到多少端倪。Obsidian_to_Anki 为了通用大量用了正则做匹配替换，这里排查起来就很头疼，我对JavaScript又不是很熟，也想通过改正则来解决，最后也没搞定。&lt;&#x2F;p&gt;
+&lt;p&gt;前两天搞的烦了就想为啥不自己弄，我又不需要做一个通用工具，只要按照自己的需求简单实现就好了。我的制卡笔记也非常的简单，简单的文本查找应该就能搞定。&lt;&#x2F;p&gt;
+&lt;p&gt;决定之后就是实现了，为了简单肯定用python了，但是我python也不是太熟😹。不过不是还有GPT吗，通过一个prompt把核心代码就生成好了。&lt;&#x2F;p&gt;
+&lt;p&gt;代码生成Prompt：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;markdown&quot; class=&quot;language-markdown &quot;&gt;&lt;code class=&quot;language-markdown&quot; data-lang=&quot;markdown&quot;&gt;I want you to act as a computer expert，your task is to write python code to extract flash card from markdown and send it to anki. 
+## steps:
+1. extract front and back value from markdown file path
+2. if content matches `![xxx]`, you should extract xxx value
+2. convert front and back value to html, replace `![xxx]` to `&amp;lt;img src=&amp;#x27;xxx&amp;#x27; &amp;#x2F;&amp;gt;`
+3. connect to anki with ankiconnect
+3. create Basic card with front and back value
+
+## markdown content example
+```观放白鹰二首 
+唐⋅ 李白 #flashcard 
+
+【其一】 
+八月边风高，胡鹰白锦毛。 
+孤飞一片雪，百里见秋毫。 
+【其二】 
+寒冬十二月，苍鹰八九毛。 
+寄言燕雀莫相啅，自有云霄万里高。
+
+---
+
+十一月四日风雨大作（其一）
+宋⋅ 陆游 #flashcard 
+
+风卷江湖雨暗村，四山声作海涛翻。 
+溪柴火软蛮毡暖，我与狸奴不出门。
+
+---```
+
+## attention
+1. markdown contains multiple cards seperate by `---`
+2. content before `#flashcard` is front value, after is back value
+3. back value is markdown text, you should convert it to html
+
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;生成的代码整体质量还不错，简单修复一些问题后已经达到能用的状态了。不过生成的python代码太过程试有点不是很满意，又让GPT重构成更简洁和面向对象的风格，同时增加参数解析。最终生成的代码效果还不错，感觉让我自己来写这个代码可能还没它写的好😛。&lt;&#x2F;p&gt;
+&lt;p&gt;脚本的执行效果：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;usage: anki2.py [-h] [--deck_name DECK_NAME] [--model_name MODEL_NAME] [--debug] vault_path note_path
+
+Sync Obsidian flashcards with Anki
+
+positional arguments:
+  vault_path            The file path to the Obsidian vault
+  note_path             The path to the note folder within the vault
+
+options:
+  -h, --help            show this help message and exit
+  --deck_name DECK_NAME
+                        The name of the Anki deck (optional)
+  --model_name MODEL_NAME
+                        The name of the Anki model (optional)
+  --debug               Enable debug logging
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;markdown-to-anki&#x2F;anki_card.webp&quot; alt=&quot;anki_card&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Code：&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;linq&#x2F;markdown-to-anki&#x2F;tree&#x2F;main&quot;&gt;markdown-to-anki&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>径山祈福</title>
+        <published>2024-01-27T00:00:00+00:00</published>
+        <updated>2024-01-27T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/jingshansi/" type="text/html"/>
+        <id>https://linq.github.io/posts/jingshansi/</id>
+        
+        <content type="html">&lt;p&gt;听同事说径山寺求事业比较灵，本来2周前就计划要去的，因为各种延期两次今天终于成行。径山寺之前也来过两次了，上次来应该是前年过年的时候，那时候山上积雪挺大，景色还是挺好的。今天的天气就不算太好，温度低加上一直没有太阳，体感上就比较冷。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;jingshansi&#x2F;jingshansi01.webp&quot; alt=&quot;径山寺入口&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;jingshansi&#x2F;jingshansi02.webp&quot; alt=&quot;大殿&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;因为到山上已经11点半，我们直接去吃斋面，之前两次都没吃到，这次排了5分钟左右终于是吃到了。点了两份素面和一份小菜，素面味道还是挺不错的（就是太不顶饿了，下午2点就饿了😑）。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;jingshansi&#x2F;jingshansi03.webp&quot; alt=&quot;素面&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;吃完面在寺庙里面各种拜，中途看到有抄经书的项目，跟老婆一起体验了下，原来以为是对着抄，没想到是临摹，不过对于我这种多年不写字的人来说反倒是方便了。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;jingshansi&#x2F;jingshansi04.webp&quot; alt=&quot;我抄的经书&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;我的字太烂了，及时临摹也很丑😄&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;jingshansi&#x2F;jingshansi05.webp&quot; alt=&quot;老婆在抄经书&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;一些随拍
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;jingshansi&#x2F;jingshansi06.webp&quot; alt=&quot;度一切苦厄&quot; &#x2F;&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;jingshansi&#x2F;jingshansi08.webp&quot; alt=&quot;小角落&quot; &#x2F;&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;jingshansi&#x2F;jingshansi07.webp&quot; alt=&quot;灯笼&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>写好日记</title>
+        <published>2024-01-21T00:00:00+00:00</published>
+        <updated>2024-01-21T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/write-journal/" type="text/html"/>
+        <id>https://linq.github.io/posts/write-journal/</id>
+        
+        <content type="html">&lt;h3 id=&quot;wo-de-ri-ji-zhi-lu&quot;&gt;我的日记之旅&lt;&#x2F;h3&gt;
+&lt;p&gt;去年5月份开始写日记，算起来也半年多了。最开始也没什么章法，简单将内容分为三块：今日的事项，整体的感想和明天的计划等。写了三个月之后，感觉不算太好，然后在小红书上找了一番，看到一个不错的记笔记的方法，就按照推荐的方式把日记划分成5个部分：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;反思模块，主要记今天有什么做的不好需要改进的&lt;&#x2F;li&gt;
+&lt;li&gt;感触模块，写今日的心情，开心快乐都记下来&lt;&#x2F;li&gt;
+&lt;li&gt;感恩模块，记录三件让自己感恩的事&lt;&#x2F;li&gt;
+&lt;li&gt;成就模块，记录自己有成就感的三件事&lt;&#x2F;li&gt;
+&lt;li&gt;明日计划，提前规划明天要做的事情&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;几个月写下来感觉还不错，也没有以前那种莫名的焦虑感。不过也有一些感觉做的不太满意的，主要是每个模块的内容都不算多，一般就1，2句话，偶尔反思的内容可能会多点。总感觉日记内容是不是应该多点，心里总有个疙瘩吧。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ali-abdaalde-ri-ji-fen-xiang&quot;&gt;Ali Abdaal的日记分享&lt;&#x2F;h3&gt;
+&lt;p&gt;这周在B站正好看到Ali Abdaal分享的 &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1bN4y1v7E3&quot;&gt;改变人生的3种日记写法&lt;&#x2F;a&gt;，感觉跟自己现在的日记方式还挺契合的，而且貌似我的层次还可以提升，所以重点的学习了下。&lt;&#x2F;p&gt;
+&lt;p&gt;按照Ali Abdaal 记日记分为三层&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;第一层，写今天做了什么事&lt;&#x2F;li&gt;
+&lt;li&gt;第二层，写自己的感受&lt;&#x2F;li&gt;
+&lt;li&gt;第三层，写应该做什么&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;按照这个层次理论我现在应该是在第二层，我的日记包括了感想和感恩，但是还缺少思考决策。&lt;&#x2F;p&gt;
+&lt;p&gt;我们先来回顾下第二层的日记，核心是要记录下自己的感受，可以是任何痛苦，消极或者抓马的事件。这个可以帮我们理解自己对事情的想法和感受，一旦我们了解了自己的想法感受，就不容易感受压力、忧虑和焦虑。&lt;&#x2F;p&gt;
+&lt;p&gt;里面还提到了“感谢练习”，其实对应就是感恩日记，这个我感觉还是挺有用的。每天写三个感谢的人和事，感觉生活都是美好。我一般会感谢身边的亲人、同事，有时也会感谢外面遇到陌生人，感谢一些举手之劳。这个应该是潜移默化的，慢慢的感觉自己能更好的看待身边的人和事。&lt;&#x2F;p&gt;
+&lt;p&gt;再来看下第三层的日记，我感觉这个应该是反思日记的进阶，更多的是要指导自己，让我们成为更好的自己。里面的关键是，&lt;strong&gt;要写下你应该做什么，你想去往哪个方向，你想做什么决定，以及此时此地应该采取什么行动。&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;这个还是有点难的，Ali Abdaal 提了几种提示方式，包括&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;奥德赛计划&lt;&#x2F;li&gt;
+&lt;li&gt;生命之轮&lt;&#x2F;li&gt;
+&lt;li&gt;十二月庆祝&lt;&#x2F;li&gt;
+&lt;li&gt;恐惧设定练习&lt;&#x2F;li&gt;
+&lt;li&gt;所罗门悖论&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h4 id=&quot;ao-de-sai-ji-hua&quot;&gt;奥德赛计划&lt;&#x2F;h4&gt;
+&lt;ol&gt;
+&lt;li&gt;如果我继续照这条路走下去，5年后我的生活会是什么样子&lt;&#x2F;li&gt;
+&lt;li&gt;如果我走一条完全不同的路，5年后我的生活会是什么样子&lt;&#x2F;li&gt;
+&lt;li&gt;如果我走一条完全不同的路，同时我不用担心钱也不同在乎别人的眼光，5年后我的生活会是什么样子&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h4 id=&quot;sheng-ming-zhi-lun&quot;&gt;生命之轮&lt;&#x2F;h4&gt;
+&lt;p&gt;把你的生活分成8～10个不同的组成部分，你只需要评价你在这些部分里感受的幸福或满意度&lt;&#x2F;p&gt;
+&lt;p&gt;满分十分，包括身体、心理、健康、职业、收入、成长、爱情、家庭、友谊。把握自己生命之轮，思考假如只有三分，不必苛责自己，而是怎么提升至5分？&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;shi-er-yue-qing-zhu-tada&quot;&gt;十二月庆祝🎉&lt;&#x2F;h4&gt;
+&lt;p&gt;从现在起12个月后，在生活的不同方面，我想和朋友一起庆祝什么？&lt;&#x2F;p&gt;
+&lt;p&gt;比如：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;每周去健身房三次&lt;&#x2F;li&gt;
+&lt;li&gt;庆祝我订婚了&lt;&#x2F;li&gt;
+&lt;li&gt;庆祝我的第一次创业&lt;&#x2F;li&gt;
+&lt;li&gt;庆祝在工作中要求加薪&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;通过展望未来，通过问自己这些问题，我们能够更好的知道此时此地要去做哪些行动&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;kong-ju-she-ding-lian-xi&quot;&gt;恐惧设定练习&lt;&#x2F;h4&gt;
+&lt;p&gt;花10分钟问问自己以下问题&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;如果我去做我害怕的事情，最糟糕的后果是什么&lt;&#x2F;li&gt;
+&lt;li&gt;我能做些什么来防止那些坏事发生&lt;&#x2F;li&gt;
+&lt;li&gt;如果最坏的情况发生了，我能做什么来修复它&lt;&#x2F;li&gt;
+&lt;li&gt;如果我试过甚至取得了小小成功，那我会得到什么好处&lt;&#x2F;li&gt;
+&lt;li&gt;如果我害怕的事一件不做，半年、一年、三年后，我的生活会怎样&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h4 id=&quot;luo-men-bei-lun&quot;&gt;罗门悖论&lt;&#x2F;h4&gt;
+&lt;p&gt;和85岁的自己对话，让TA给你提提建议。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhao-yan-dang-xia&quot;&gt;着眼当下&lt;&#x2F;h3&gt;
+&lt;p&gt;我现在也没想好怎么把Ali Abdaal的这套理论跟我的日记方式结合起来，不过也不着急，先有个映像，相信能水到渠成的。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>成为更好的自己</title>
+        <published>2024-01-13T00:00:00+00:00</published>
+        <updated>2024-01-13T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/hello-world/" type="text/html"/>
+        <id>https://linq.github.io/posts/hello-world/</id>
+        
+        <content type="html">&lt;p&gt;近期感觉记忆越来越差，很多东西都记不住。&lt;&#x2F;p&gt;
+&lt;p&gt;实践一些办法包括冥想、运动、Anki卡片，每个现在也都在坚持但是感觉效果不太行。之前也看过「费曼学习法」，其中讲到最好的学习记忆方式就是输出，那就通过博客来实践一下吧。&lt;&#x2F;p&gt;
+&lt;p&gt;初步准备每周写一篇博客吧，毕竟平时也没时间写。关于内容主要还是生活记录，也会带一些技术上的思考。对我博客输出的要求是这里的东西都是我自己思考的东西，网上摘的东西就没必要放这里了。&lt;&#x2F;p&gt;
+&lt;p&gt;关于思考这个话题，想来自己也没太多资格说。我是一个很懒的人，生活、社交、思考上都是，一回顾两手空空，脑袋也空空。&lt;&#x2F;p&gt;
+&lt;p&gt;近一年不知道哪根弦被拨动了，开始了跑步，然后开始学习新东西，写日记，而且还都坚持下来了。其实也不能说坚持，就是自然的做到了现在。可能年龄到了吧。&lt;&#x2F;p&gt;
+&lt;p&gt;回到博客，我感觉这个长期写下去也不是太难。希望多记录一些生活的美好，所输出一些自己的思考，以后回顾的时候可以会心一笑。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>Personal journal</title>
+        <published>2019-10-05T00:00:00+00:00</published>
+        <updated>2019-10-05T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/journal/" type="text/html"/>
+        <id>https://linq.github.io/journal/</id>
+        
+        <content type="html">&lt;h2 id=&quot;2023-06-29-wrench&quot;&gt;2023-06-29 🔧&lt;&#x2F;h2&gt;
+&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dapibus dignissim nulla et ornare. Vestibulum porta, risus eu ultrices condimentum, quam ante mattis massa, eget laoreet neque nisl ullamcorper nibh.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;2023-06-28-blush&quot;&gt;2023-06-28 😊&lt;&#x2F;h2&gt;
+&lt;p&gt;Etiam vulputate nibh in magna feugiat viverra. Donec ultricies sagittis justo vel facilisis. Nulla sollicitudin felis eu tortor consectetur, ac sodales odio faucibus. Vivamus id ultrices orci, ut luctus dolor. Sed sem nibh, semper in posuere eget, dictum eget dui. Praesent nunc dolor, lacinia at tortor eget, sollicitudin sagittis turpis.&lt;&#x2F;p&gt;
+&lt;div class=&quot;textCenter&quot;&gt;
+  &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;uploads-ssl.webflow.com&amp;#x2F;5ff0b3326e5782a256714165&amp;#x2F;638b6f3a3d8d2e6bad1cb03b_Random22.1.jpg&quot; alt=&quot;xfx6800xt&quot;&gt;
+  
+&lt;&#x2F;div&gt;&lt;h2 id=&quot;2022-11-30-skull&quot;&gt;2022-11-30 💀&lt;&#x2F;h2&gt;
+&lt;p&gt;Pellentesque iaculis diam leo, vel euismod libero finibus sed. Praesent ultrices libero nec lectus posuere euismod. Fusce lobortis elit dui. In non pulvinar ligula. Integer augue mauris, condimentum vitae ante sit amet, consectetur scelerisque lectus. Sed dignissim vitae magna et volutpat. Integer vel risus sagittis&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;2022-11-11-neutral-face&quot;&gt;2022-11-11 😐&lt;&#x2F;h2&gt;
+&lt;p&gt;Vivamus molestie, ipsum id ullamcorper facilisis, velit neque elementum metus, quis lacinia ligula felis et metus. Quisque at condimentum tellus, id venenatis turpis. Integer accumsan metus non mauris vulputate pretium.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;2022-10-29-popcorn&quot;&gt;2022-10-29 🍿&lt;&#x2F;h2&gt;
+&lt;p&gt;vel mollis varius. Aenean non bibendum dui, eget facilisis turpis. Cras eleifend mi vel leo malesuada, ac vestibulum est condimentum. Aenean accumsan felis elit, sed porttitor nulla volutpat nec. In leo purus, condimentum ut augue sed, imperdiet dapibus sapien. Proin id ullamcorper nisi. &lt;&#x2F;p&gt;
+&lt;h2 id=&quot;2022-10-27-anger&quot;&gt;2022-10-27 💢&lt;&#x2F;h2&gt;
+&lt;p&gt;facilisis sapien, quis faucibus leo urna ut diam. Etiam eu dolor vestibulum, cursus odio at, aliquam nibh. Donec molestie metus non purus facilisis euismod. In interdum luctus libero, in mollis est tincidunt at. Nam congue, nibh nec tempus elementum, nunc sapien placerat felis, id dignissim sapien tellus a libero. Nunc at elementum tortor, eget scelerisque elit. Donec ultricies mi at accumsan semper. Pellentesque vehicula leo sed urna dapibus, quis feugiat arcu auctor. &lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>
