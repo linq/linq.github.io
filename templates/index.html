@@ -3,11 +3,16 @@
 {% block content %}
 {{ section.content | safe }}
 
-<h2>Writing</h2>
-{% set posts_section = get_section(path="posts/_index.md") %}
+{% if config.extra.list_pages %}
+
+{% if paginator %}
+{% set pages = paginator.pages %}
+{% else %}
+{% set pages = section.pages %}
+{% endif %}
 
 <ul class="titleList">
-{% for page in posts_section.pages %}
+{% for page in pages %}
   <li>
     <a href="{{ page.permalink | safe }}">{{ page.date}}  {{ page.extra.emoji }}{{ page.title }}</a>
   </li>
@@ -18,4 +23,5 @@
 <div class="metaData">{% if paginator.previous %}<a href="{{ paginator.first }}">⥶</a> &nbsp <a href="{{ paginator.previous }}"><</a>{% endif %} &nbsp {{ paginator.current_index }} / {{ paginator.number_pagers }} &nbsp {% if paginator.next %}<a href="{{ paginator.next }}">></a> &nbsp <a href="{{ paginator.last }}">⥸</a>{% endif %}</div>
 {% endif %}
 
+{% endif %}
 {% endblock content %}

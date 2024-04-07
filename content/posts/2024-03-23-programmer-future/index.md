@@ -1,9 +1,8 @@
 ---
-title: 程序员不在了吗
+title: 程序员要不存在了吗
 description: 大模型的快速进步，特别是 AI 程序员 Devin 的问世，业界对人工智能是否将取代程序员的热议不断。程序员何去何从，程序员要不存在了吗
-
 date: 2024-03-23
-updated: 2024-03-23
+updated: 2024-04-07
 taxonomies:
   tags:
     - 大模型
@@ -12,7 +11,6 @@ taxonomies:
 extra:
   emoji: 🤖
 ---
-
 ![cognition lab devin software engineer](cognition-lab-devin-software-engineer.webp)
 
 最近大模型的发展，尤其是首个 AI 程序员 Devin 公布后，网上关于程序员不存在的言论层出不穷。尤其是近期团队的一些同学也保持这种论调，而且是很悲观的认为很快就不需要会写代码的人。

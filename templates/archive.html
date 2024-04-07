@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ section.title }}</h1>
+<h1>{{ page.title }}</h1>
 
 {% set posts_section = get_section(path="posts/_index.md") %}
 {% for year, posts in posts_section.pages | group_by(attribute="year") %}

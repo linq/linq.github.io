@@ -18,6 +18,7 @@ generate_feed = true
 
 # The taxonomies to be rendered for the site and their configuration of the default languages
 taxonomies = [
+    {name = "categories", feed = true},
     {name = "tags", feed = true},
 ]
 
@@ -30,8 +31,8 @@ build_search_index = false
 render_emoji = true
 external_links_target_blank = true
 smart_punctuation = true
-highlight_code = false
-highlight_theme = "gruvbox-dark"
+highlight_code = true
+highlight_theme = "base16-ocean-dark"
 
 [slugify]
 paths = "on"
@@ -40,19 +41,19 @@ anchors = "on"
 
 [extra]
 # Put all your custom variables here
-author = "fancylinq"
+author = "Dirigo"
 display_author = false
 
 favicon = "favicon.ico"
 image = "https://avatars.githubusercontent.com/u/1221456?v=4"
 
 default_theme = "light"
-list_pages = false
+list_pages = true
 
 header_nav = [
   { url = "/", name_zh = "/首页/" },
   { url = "/archive", name_zh = "/归档/" },
-  { url = "/tags/", name_zh = "/标签/" },
+  { url = "/tags", name_zh = "/标签/" },
   { url = "/book", name_zh = "/图书/" }
 ]
 

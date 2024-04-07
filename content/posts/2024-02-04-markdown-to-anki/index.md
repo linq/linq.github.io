@@ -24,6 +24,7 @@ extra:
 决定之后就是实现了，为了简单肯定用python了，但是我python也不是太熟😹。不过不是还有GPT吗，通过一个prompt把核心代码就生成好了。
 
 代码生成Prompt：
+
 ```markdown
 I want you to act as a computer expert，your task is to write python code to extract flash card from markdown and send it to anki. 
 ## steps:
@@ -34,7 +35,9 @@ I want you to act as a computer expert，your task is to write python code to ex
 3. create Basic card with front and back value
 
 ## markdown content example
-```观放白鹰二首 
+
+```
+观放白鹰二首 
 唐⋅ 李白 #flashcard 
 
 【其一】 

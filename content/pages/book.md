@@ -1,5 +1,8 @@
 ---
 title: "图书"
+path: "book"
+date: 2024-01-01
+updated: 2024-02-21
 ---
 
 
