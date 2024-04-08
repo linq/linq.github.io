@@ -142,7 +142,7 @@ docker run -d \
 这里面还有挺多参数可以配置，包括语言、分辨率还有字体等，如果想开箱即用可以用如下命令启动：
 
 ```bash
-docker run -d \                                                               
+docker run -d \
     --name=firefox \
     -e DISPLAY_WIDTH=1280 \
     -e DISPLAY_HEIGHT=900 \

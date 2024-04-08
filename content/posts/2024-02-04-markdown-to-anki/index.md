@@ -36,7 +36,6 @@ I want you to act as a computer expert，your task is to write python code to ex
 
 ## markdown content example
 
-```
 观放白鹰二首 
 唐⋅ 李白 #flashcard 
 
