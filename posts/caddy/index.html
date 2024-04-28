@@ -1,0 +1,57 @@
+<!doctype html><html lang=zh><head><meta charset=UTF-8><meta content="IE=edge" http-equiv=X-UA-Compatible><meta content="text/html; charset=UTF-8" http-equiv=content-type><meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport><meta content="index, follow" name=robots><title>使用Caddy配置内网HTTPS</title><meta content=使用Caddy配置内网HTTPS name=title><meta content=Dirigo name=author><meta content=使用Caddy配置内网HTTPS，避免繁琐的自签名证书 name=description><meta content=website property=og:type><meta content=https://linq.github.io/posts/caddy/ property=og:url><meta property=og:site_name><meta content=使用Caddy配置内网HTTPS property=og:title><meta content=使用Caddy配置内网HTTPS，避免繁琐的自签名证书 property=og:description><meta content=https://linq.github.io/favicon.ico property=og:image><meta content=summary_large_image property=twitter:card><meta content=https://linq.github.io/posts/caddy/ property=twitter:url><meta content=使用Caddy配置内网HTTPS property=twitter:title><meta content=使用Caddy配置内网HTTPS，避免繁琐的自签名证书 property=twitter:description><meta content=https://linq.github.io/favicon.ico property=twitter:image><link href=https://linq.github.io/posts/caddy/ rel=canonical><link rel="shortcut icon" href=https://linq.github.io/favicon.ico type=image/x-icon><link href=https://linq.github.io/atom.xml rel=alternate title=RSS type=application/atom+xml><link href=https://linq.github.io/css/style.css rel=stylesheet><link href=https://linq.github.io/css/custom.css rel=stylesheet><script defer src=https://linq.github.io/js/script.js></script><body><div class=wrapper><header><nav class=navBar><a href=/> /首页/ </a><a href=/archive> /归档/ </a><a href=/tags> /标签/ </a><a href=/book> /图书/ </a><div class=themeSwitch><button class="themeButton light" onclick="setTheme('light')" title="Light mode"><svg class="icons icons__background"><use href=https://linq.github.io/icons.svg#lightMode></use></svg></button><button class="themeButton dark" onclick="setTheme('dark')" title="Dark mode"><svg class="icons icons__background"><use href=https://linq.github.io/icons.svg#darkMode></use></svg></button></div></nav></header><main><h1>使用Caddy配置内网HTTPS</h1><p><img alt=Caddy src=https://user-images.githubusercontent.com/1128849/210187356-dfb7f1c5-ac2e-43aa-bb23-fc014280ae1f.svg><p>NAS 上通过 Docker 部署的服务越来越多，每次都是通过独立的端口开放出来，虽然也可以用，但是每次都需要 IP 感觉很麻烦。这周又搞了两个新的服务部署上去，尤其其中一个通过 IP 来使用还有点问题，就调研了下怎么折腾内网的HTTPS。<p>首先想到的就是 NGINX，工作中用的比较多，之前为了部署 Bitwarden 也已经部署了。不过内心有点拒绝，总感觉 NGINX 有点太重了，也可能是工作中用的比较多，对它的语法感觉不是特别喜欢，尤其是转发指令各种潜规则，很容易犯错。抱着折腾一下的心态，用 Google 和 GPT 搜了下可选的方案，发现 Google 和 GPT 都推荐 Caddy。简单查了一些资料，发现跟配置方式跟 NGINX 挺像的，而且貌似更轻量级，配置也简化了不少。<p>接下来直奔主题看下 HTTPS 怎么配置，我能想到的就是自签名证书的方式，所以重点看了相关的资料，Caddy 也的确支持。<p>首先是证书生成：<pre class=language-bash data-lang=bash style=background:#2b303b;color:#c0c5ce><code class=language-bash data-lang=bash><span style=color:#bf616a>openssl</span><span> req</span><span style=color:#bf616a> -x509 -nodes -days</span><span> 365</span><span style=color:#bf616a> -newkey</span><span> rsa:2048</span><span style=color:#bf616a> -keyout </span><span>"</span><span style=color:#a3be8c>n1.key</span><span>"</span><span style=color:#bf616a> -out </span><span>"</span><span style=color:#a3be8c>n1.crt</span><span>"</span><span style=color:#bf616a> -subj </span><span>"</span><span style=color:#a3be8c>/CN=*.n1.to</span><span>"
+</span></code></pre><p>然后修改 Caddyfile 来使用证书：<pre class=language-bash data-lang=bash style=background:#2b303b;color:#c0c5ce><code class=language-bash data-lang=bash><span>{
+</span><span>    </span><span style=color:#bf616a>auto_https</span><span> off
+</span><span>    </span><span style=color:#bf616a>log </span><span>{
+</span><span>        output file /data/caddy.log
+</span><span>        level INFO
+</span><span>        format console {
+</span><span>            time_local
+</span><span>            time_format wall_milli
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span><span>
+</span><span style=color:#bf616a>*.n1.to </span><span>{
+</span><span>    tls /ssl/n1.crt /ssl/n1.key
+</span><span>}
+</span><span>
+</span><span style=color:#bf616a>https://chat.n1.to </span><span>{
+</span><span>    reverse_proxy * chatgpt:3000
+</span><span>}
+</span><span>
+</span><span style=color:#bf616a>https://vault.n1.to </span><span>{
+</span><span>    reverse_proxy * vaultwarden:80
+</span><span>}
+</span></code></pre><p>配置后基本满足需求，能通过浏览器直接访问对应的域名，各个服务也能正常使用。但是有一点让我有点难受，Chrome 对于自签名证书每次重新打开的时候都会提示不安全，每次都需要点击一次确认才能使用。<p>这时候求助万能的GPT，<code>caddy有其它方式支持内部域名https吗</code>，GPT 给出的答案中有一个<strong>内部CA颁发的证书</strong>的方案，专门去官网了解了下，发现 Caddy 可以通过 tls internal 的方式，直接使用内置的PKI 来颁发证书，而且配置非常的方便，只需要声明一个 tls internal，其它的 Caddy 帮你搞定。<p>然后就是第二版的 Caddyfile：<pre class=language-bash data-lang=bash style=background:#2b303b;color:#c0c5ce><code class=language-bash data-lang=bash><span>{
+</span><span>    </span><span style=color:#bf616a>log </span><span>{
+</span><span>        output file /data/caddy.log
+</span><span>        level INFO
+</span><span>        format console {
+</span><span>            time_local
+</span><span>            time_format wall_milli
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span><span>
+</span><span style=color:#bf616a>*.n1.to </span><span>{
+</span><span>    tls internal {
+</span><span>        on_demand
+</span><span>    }
+</span><span>
+</span><span>    @chat host chat.n1.to
+</span><span>    handle @chat {
+</span><span>        reverse_proxy * chatgpt:3000
+</span><span>    }
+</span><span>
+</span><span>    @vault host vault.n1.to
+</span><span>    handle @vault {
+</span><span>        reverse_proxy * vaultwarden:80
+</span><span>    }
+</span><span>
+</span><span>
+</span><span>    handle {
+</span><span>        abort
+</span><span>    }
+</span><span>}
+</span></code></pre><p>这里的核心就是 <code>tls internal</code> 这部分，Caddy 判断是内部tls 之后，会在请求指定域名的时候（比如 <code>chat.n1.to</code>），内部通过 local 的 ca 来请求证书并下发给浏览器，只要你把 Caddy 的 root.crt 的根证书安装，所有Caddy 颁发的子证书都是被信任的。这个时候你打开指定的域名就不会提示不安全，而且地址栏上的🔐也是绿色的。<p>这里补充下Mac 上如何安装 <code>root.crt</code>：<pre class=language-bash data-lang=bash style=background:#2b303b;color:#c0c5ce><code class=language-bash data-lang=bash><span style=color:#bf616a>sudo</span><span> security add-trusted-cert</span><span style=color:#bf616a> -d -k</span><span> /Library/Keychains/System.keychain /path/to/root.crt
+</span></code></pre><p>然后这个 <code>root.crt</code> 哪里来，在类Unix 的环境中，可以在 <code>$HOME/.local/share/caddy/pki/authorities/local/root.crt</code> 中找到。<p>整体折腾完感觉还是很满意的，而且发现了 Caddy 这么一个神器，后续想做一个简单的反向代理完全可以拿过来用。而且 Caddy 有一个非常方便的功能，如果你有一个外网域名，完成不需要自己申请tls 证书，Caddy 直接集成了Let’s Encrypt，自动帮你申请和续签证书，配置也很简单，感觉这才是新网关应该有的样子。<p>配置参考：<a href=https://caddyserver.com/docs/caddyfile rel=noopener target=_blank>caddyfile</a><p class=tagsData><a href=/tags/ji-zhu>/技术/</a> <a href=/tags/caddy>/caddy/</a></main><footer><hr><div class=footContainer><div class=footLeft><p>Licensed under <a rel="noopener noreferrer" href=https://fr.wikipedia.org/wiki/Licence_MIT target=_blank>MIT</a><br> Built with <a rel="noopener noreferrer" href=https://www.getzola.org target=_blank>Zola</a> using <a rel="noopener noreferrer" href=https://github.com/Speyll/anemone target=_blank>anemone</a> theme & <a rel="noopener noreferrer" href=https://github.com/Speyll/veqev target=_blank>veqev</a> colors.<br></div><div class=footRight><a rel="noopener noreferrer" title="Subscribe via RSS for updates." class=icons__background href=https://linq.github.io/atom.xml target=_blank><svg class="icons icons__background"><use href=https://linq.github.io/icons.svg#rss></use></svg></a></div></div></footer></div>

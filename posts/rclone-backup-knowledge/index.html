@@ -1,0 +1,71 @@
+<!doctype html><html lang=zh><head><meta charset=UTF-8><meta content="IE=edge" http-equiv=X-UA-Compatible><meta content="text/html; charset=UTF-8" http-equiv=content-type><meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport><meta content="index, follow" name=robots><title>使用rclone备份知识库</title><meta content=使用rclone备份知识库 name=title><meta content=Dirigo name=author><meta content=使用rclone备份知识库 name=description><meta content=website property=og:type><meta content=https://linq.github.io/posts/rclone-backup-knowledge/ property=og:url><meta property=og:site_name><meta content=使用rclone备份知识库 property=og:title><meta content=使用rclone备份知识库 property=og:description><meta content=https://linq.github.io/favicon.ico property=og:image><meta content=summary_large_image property=twitter:card><meta content=https://linq.github.io/posts/rclone-backup-knowledge/ property=twitter:url><meta content=使用rclone备份知识库 property=twitter:title><meta content=使用rclone备份知识库 property=twitter:description><meta content=https://linq.github.io/favicon.ico property=twitter:image><link href=https://linq.github.io/posts/rclone-backup-knowledge/ rel=canonical><link rel="shortcut icon" href=https://linq.github.io/favicon.ico type=image/x-icon><link href=https://linq.github.io/atom.xml rel=alternate title=RSS type=application/atom+xml><link href=https://linq.github.io/css/style.css rel=stylesheet><link href=https://linq.github.io/css/custom.css rel=stylesheet><script defer src=https://linq.github.io/js/script.js></script><body><div class=wrapper><header><nav class=navBar><a href=/> /首页/ </a><a href=/archive> /归档/ </a><a href=/tags> /标签/ </a><a href=/book> /图书/ </a><div class=themeSwitch><button class="themeButton light" onclick="setTheme('light')" title="Light mode"><svg class="icons icons__background"><use href=https://linq.github.io/icons.svg#lightMode></use></svg></button><button class="themeButton dark" onclick="setTheme('dark')" title="Dark mode"><svg class="icons icons__background"><use href=https://linq.github.io/icons.svg#darkMode></use></svg></button></div></nav></header><main><h1>使用rclone备份知识库</h1><p>一直使用 <code>Obsidian</code> 管理个人的知识库，然后配合 <code>syncthing</code> 进行多台设置之间的同步。近期同步的时候发现整个知识库的文件大小已经达到 2GB，对于如此核心的资产，貌似容灾做的很不够。<p>现在的核心数据是存放在 N1 小 NAS 上挂载的移动硬盘上，然后通过 Syncthing 同步到家里的电脑和公司的电脑上，暂且可以认为有 3 个备份。这里有两个痛点，首先服务器上的数据是在移动硬盘上的，感觉不是很保险，如果什么时候突然出现故障，估计数据要找回是个很大的问题。然后就是两台电脑上的数据只是为了写作用，不会时刻跟服务器上保持同步，一般是写完一些内容提交下，可能会有 1 到 2 天的延迟。<p>在考虑好要做备份后，我首先想到的就是同步到云盘，毕竟本地虽然方便，但是要自己做好数据保护，放到云上就可以让对应的服务商帮你搞定这一切。云盘第一个想到的就是自己用的比较多的阿里云盘，另外是国内能正常访问的 <code>onedrive</code>。定好存储后就是如何同步上去，网上搜了下后大致确认使用 <code>rclone</code>。<p>初步写了个脚本实现定时同步。<pre class=language-bash data-lang=bash style=background:#2b303b;color:#c0c5ce><code class=language-bash data-lang=bash><span style=color:#65737e>#!/bin/sh
+</span><span>
+</span><span style=color:#65737e># Define the source and destination
+</span><span style=color:#bf616a>SOURCE</span><span>="</span><span style=color:#a3be8c>/backup</span><span>"
+</span><span style=color:#bf616a>DESTINATION</span><span>="</span><span style=color:#a3be8c>:/Backup</span><span>"
+</span><span>
+</span><span style=color:#65737e># Define the list of flags
+</span><span style=color:#bf616a>providers</span><span>="</span><span style=color:#a3be8c>aliyun onedrive</span><span>"
+</span><span>
+</span><span style=color:#65737e># Infinite loop
+</span><span style=color:#b48ead>while </span><span style=color:#bf616a>true</span><span>; </span><span style=color:#b48ead>do
+</span><span>	</span><span style=color:#b48ead>for</span><span> provider </span><span style=color:#b48ead>in </span><span>$</span><span style=color:#bf616a>providers</span><span>; </span><span style=color:#b48ead>do
+</span><span>		</span><span style=color:#65737e># Record the start time of the synchronization
+</span><span>		</span><span style=color:#96b5b4>echo </span><span>"</span><span style=color:#a3be8c>[</span><span>$</span><span style=color:#bf616a>provider</span><span style=color:#a3be8c>] Sync started at </span><span>$</span><span style=color:#a3be8c>(</span><span style=color:#bf616a>date</span><span style=color:#a3be8c>)</span><span>"
+</span><span>
+</span><span>		</span><span style=color:#65737e># Run rclone command
+</span><span>		</span><span style=color:#bf616a>rclone -v --config</span><span> /data/rclone.conf sync "$</span><span style=color:#bf616a>SOURCE</span><span>" "$</span><span style=color:#bf616a>provider</span><span>$</span><span style=color:#bf616a>DESTINATION</span><span>"</span><span style=color:#bf616a> --exclude-from</span><span> exclude-file.txt
+</span><span>
+</span><span>		</span><span style=color:#65737e># Record the end time of the synchronization
+</span><span>		</span><span style=color:#96b5b4>echo </span><span>"</span><span style=color:#a3be8c>[</span><span>$</span><span style=color:#bf616a>provider</span><span style=color:#a3be8c>] Sync completed at </span><span>$</span><span style=color:#a3be8c>(</span><span style=color:#bf616a>date</span><span style=color:#a3be8c>)</span><span>"
+</span><span>	</span><span style=color:#b48ead>done
+</span><span>
+</span><span>	</span><span style=color:#65737e># Sleep for 10 minutes
+</span><span>	</span><span style=color:#bf616a>sleep</span><span> 600
+</span><span style=color:#b48ead>done
+</span></code></pre><p>不过在跑了一个晚上后发现一个很大的问题，阿里云盘竟然每次都跑的时候都会同步。然后去翻 <code>rclone</code> 的官方文档，发现是 <code>Webdav</code> 协议本身不支持将文件的元数据同步到服务端。不过 <code>rclone</code> 做了扩展，可以通过 <code>X-OC-Mtime</code> 头来支持，但是需要 <code>Webdav</code> 服务商能识别该 header。然后我去 <code>Alist</code> 的 GitHub 找 issues，没想到还真兼容，但是我在修改 <code>Webdav</code> 服务器和 <code>rclone</code> 的 vender 之后，发现还是一样的问题。然后再去确认，发现阿里云盘竟然又<a href=https://github.com/alist-org/alist/issues/4938 rel=noopener target=_blank>不支持</a>了😂。<p>没办法放弃阿里云盘，但是觉得一家不保险，就考虑加个 Google Drive 吧，考虑到 Google Drive 需要魔法上网，把脚本改成可以配置的方式。同时觉得一直傻轮询的方式很蠢，网上找了个 rust 的 watchexec 来监控文件变化，有变更的时候再执行脚本，基本实现了自己的需求。<pre class=language-bash data-lang=bash style=background:#2b303b;color:#c0c5ce><code class=language-bash data-lang=bash><span style=color:#65737e>#!/bin/sh
+</span><span>
+</span><span style=color:#65737e># Proxy 配置
+</span><span style=color:#bf616a>PROXY</span><span>="</span><span style=color:#a3be8c>http://xx:xx@127.0.0.1:5678</span><span>" </span><span style=color:#65737e># 请替换成你的代理服务器和端口
+</span><span>
+</span><span style=color:#65737e># provider 配置，格式为："provider_name=true|false"
+</span><span style=color:#bf616a>PROVIDERS</span><span>="</span><span style=color:#a3be8c>onedrive=false
+</span><span style=color:#a3be8c>gdrive=true</span><span>"
+</span><span>
+</span><span style=color:#8fa1b3>log</span><span>() {
+</span><span>        </span><span style=color:#96b5b4>echo </span><span>"$</span><span style=color:#a3be8c>(</span><span style=color:#bf616a>date </span><span>'</span><span style=color:#a3be8c>+%Y/%m/%d %H:%M:%S</span><span>'</span><span style=color:#a3be8c>) INFO  : </span><span>$</span><span style=color:#bf616a>1</span><span>"
+</span><span>}
+</span><span>
+</span><span style=color:#8fa1b3>setup_proxy</span><span>() {
+</span><span>        </span><span style=color:#b48ead>export </span><span style=color:#bf616a>http_proxy</span><span>=$</span><span style=color:#bf616a>PROXY
+</span><span>        </span><span style=color:#b48ead>export </span><span style=color:#bf616a>https_proxy</span><span>=$</span><span style=color:#bf616a>PROXY
+</span><span>        </span><span style=color:#bf616a>log </span><span>"</span><span style=color:#a3be8c>Enable Proxy for </span><span>$</span><span style=color:#bf616a>1</span><span style=color:#a3be8c>.</span><span>"
+</span><span>}
+</span><span>
+</span><span style=color:#8fa1b3>unset_proxy</span><span>() {
+</span><span>        </span><span style=color:#96b5b4>unset</span><span> http_proxy
+</span><span>        </span><span style=color:#96b5b4>unset</span><span> https_proxy
+</span><span>        </span><span style=color:#bf616a>log </span><span>"</span><span style=color:#a3be8c>Disable Proxy for </span><span>$</span><span style=color:#bf616a>1</span><span style=color:#a3be8c>.</span><span>"
+</span><span>}
+</span><span>
+</span><span style=color:#8fa1b3>rclone_command</span><span>() {
+</span><span>        </span><span style=color:#bf616a>provider</span><span>=$</span><span style=color:#bf616a>1
+</span><span>        </span><span style=color:#65737e># 这里应该是你要执行的rclone命令
+</span><span>        </span><span style=color:#bf616a>log </span><span>"</span><span style=color:#a3be8c>Start rclone for provider: </span><span>$</span><span style=color:#bf616a>provider</span><span>"
+</span><span>        </span><span style=color:#65737e># 此处添加你的rclone命令，例如：
+</span><span>        </span><span style=color:#bf616a>rclone -v --config</span><span> /data/rclone.conf sync "</span><span style=color:#a3be8c>/backup</span><span>" "$</span><span style=color:#bf616a>provider</span><span style=color:#a3be8c>:/Backup</span><span>"</span><span style=color:#bf616a> --exclude-from</span><span> /data/exclude-file.txt
+</span><span>        </span><span style=color:#bf616a>log </span><span>"</span><span style=color:#a3be8c>Finish rclone for provider: </span><span>$</span><span style=color:#bf616a>provider</span><span>"
+</span><span>}
+</span><span>
+</span><span style=color:#65737e># 读取并处理每一个provider的配置
+</span><span style=color:#96b5b4>echo </span><span>"$</span><span style=color:#bf616a>PROVIDERS</span><span>" | </span><span style=color:#b48ead>while </span><span style=color:#bf616a>IFS</span><span>='</span><span style=color:#a3be8c>=</span><span>' read</span><span style=color:#bf616a> -r</span><span> provider proxy_enabled; </span><span style=color:#b48ead>do
+</span><span>        </span><span style=color:#b48ead>if </span><span style=color:#96b5b4>[ </span><span>"$</span><span style=color:#bf616a>proxy_enabled</span><span>" = "</span><span style=color:#a3be8c>true</span><span>" </span><span style=color:#96b5b4>]</span><span>; </span><span style=color:#b48ead>then
+</span><span>                </span><span style=color:#bf616a>setup_proxy </span><span>"$</span><span style=color:#bf616a>provider</span><span>"
+</span><span>                </span><span style=color:#bf616a>rclone_command </span><span>"$</span><span style=color:#bf616a>provider</span><span>"
+</span><span>                </span><span style=color:#bf616a>unset_proxy </span><span>"$</span><span style=color:#bf616a>provider</span><span>"
+</span><span>        </span><span style=color:#b48ead>else
+</span><span>                </span><span style=color:#bf616a>rclone_command </span><span>"$</span><span style=color:#bf616a>provider</span><span>"
+</span><span>        </span><span style=color:#b48ead>fi
+</span><span>        </span><span style=color:#bf616a>log </span><span>"</span><span style=color:#a3be8c>---------------------------------------</span><span>"
+</span><span style=color:#b48ead>done
+</span></code></pre><p>以上的脚本基本实现了想要的功能，不过在了解 watchexec 之后，我发现 watchexec 原来可以将变更文件输出，这样其实配合 rclone 的 <code>--filter-from</code> 参数其实是可以实现客户端的增量同步的，也就能解决 webdav 的每次都同步问题。不过这个脚本得配合着一些改动，况且感觉现在也够用了，后续有新的需求的时候再考虑修改下。<p class=tagsData><a href=/tags/ji-zhu>/技术/</a> <a href=/tags/obsidian>/Obsidian/</a> <a href=/tags/rclone>/rclone/</a></main><footer><hr><div class=footContainer><div class=footLeft><p>Licensed under <a rel="noopener noreferrer" href=https://fr.wikipedia.org/wiki/Licence_MIT target=_blank>MIT</a><br> Built with <a rel="noopener noreferrer" href=https://www.getzola.org target=_blank>Zola</a> using <a rel="noopener noreferrer" href=https://github.com/Speyll/anemone target=_blank>anemone</a> theme & <a rel="noopener noreferrer" href=https://github.com/Speyll/veqev target=_blank>veqev</a> colors.<br></div><div class=footRight><a rel="noopener noreferrer" title="Subscribe via RSS for updates." class=icons__background href=https://linq.github.io/atom.xml target=_blank><svg class="icons icons__background"><use href=https://linq.github.io/icons.svg#rss></use></svg></a></div></div></footer></div>
