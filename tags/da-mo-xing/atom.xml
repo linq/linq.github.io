@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh">
+    <title> - 大模型</title>
+    <link href="https://linq.github.io/tags/da-mo-xing/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://linq.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-04-07T00:00:00+00:00</updated>
+    <id>https://linq.github.io/tags/da-mo-xing/atom.xml</id>
+    <entry xml:lang="zh">
+        <title>程序员要不存在了吗</title>
+        <published>2024-03-23T00:00:00+00:00</published>
+        <updated>2024-04-07T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/programmer-future/" type="text/html"/>
+        <id>https://linq.github.io/posts/programmer-future/</id>
+        
+        <content type="html">&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;programmer-future&#x2F;cognition-lab-devin-software-engineer.webp&quot; alt=&quot;cognition lab devin software engineer&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;最近大模型的发展，尤其是首个 AI 程序员 Devin 公布后，网上关于程序员不存在的言论层出不穷。尤其是近期团队的一些同学也保持这种论调，而且是很悲观的认为很快就不需要会写代码的人。&lt;&#x2F;p&gt;
+&lt;p&gt;首先对于这个观点我持保守态度，不可否认大模型的发展很快，现在都已经能写出一定复杂度的代码。但是我们也应该看到的是，现在大模型写的代码能力还是比较初级的，基本是一些脚本，或者一些复杂度不高的功能。对于一个大型的信息系统，比如一个企业信息管理系统，我不认为在没有足够输入的情况下它能做到满足需求。而且这里存在的一个很大的问题是，写代码容易，如果我需要增加功能怎么办，最简单的是把整个代码逛给大模型，然后再通过一定的提示词让它来改吗，这里就涉及到一个很麻烦的问题，如何保证模型能按照你想要的方向来改代码，如何保证写出来的代码不会因为幻觉出现牛头不对马嘴。更重要的是，出错了怎么办，让模型自己改吗。&lt;&#x2F;p&gt;
+&lt;p&gt;其次是我认为大模型应该只是加速低级程序员的淘汰过程。我一直坚信技术是为业务服务的，技术也应该是从业务的快速发展需求中沉淀出来的，而不是闭门造车，或者低级的复制。对于有一定业务 sense 的程序员，他其实已经不只是在写代码，更是在通过技术方式将自己的领域知识转化成领域模型，完善产品设计。而对于看不到业务只埋头技术的程序员，只会简单的 CRUD 的程序员，我觉得被替代的可能性还是存在的。毕竟让大模型写出一个纯技术黑盒能用的代码还是不复杂的，大不了要加功能点的时候再生成一遍就好了。&lt;&#x2F;p&gt;
+&lt;p&gt;回到我的观点，大模型的发展对整个软件行业是有利的，想想以前遇到一个问题只能 Google，还可能遇到 CSDN 这种不靠谱的网站，现在一个简单的 prompt 再贴点提示信息差不多就能找到问题。而且大模型也加速了程序员学习技能的速度，以前学一个技术可能需要两三天，现在通过跟着大模型学习，可能小半天就能掌握个七七八八了。&lt;&#x2F;p&gt;
+&lt;p&gt;最重要的，我们不能做一个只会简单编码的人，技术需要服务业务，一个业务技术都擅长的架构师，又如何会怕 AI 踢掉自己的饭碗呢。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh">
+    <title> - caddy</title>
+    <link href="https://linq.github.io/tags/caddy/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://linq.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-03-31T00:00:00+00:00</updated>
+    <id>https://linq.github.io/tags/caddy/atom.xml</id>
+    <entry xml:lang="zh">
+        <title>使用Caddy配置内网HTTPS</title>
+        <published>2024-03-31T00:00:00+00:00</published>
+        <updated>2024-03-31T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/caddy/" type="text/html"/>
+        <id>https://linq.github.io/posts/caddy/</id>
+        
+        <content type="html">&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;1128849&#x2F;210187356-dfb7f1c5-ac2e-43aa-bb23-fc014280ae1f.svg&quot; alt=&quot;Caddy&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;NAS 上通过 Docker 部署的服务越来越多，每次都是通过独立的端口开放出来，虽然也可以用，但是每次都需要 IP 感觉很麻烦。这周又搞了两个新的服务部署上去，尤其其中一个通过 IP 来使用还有点问题，就调研了下怎么折腾内网的HTTPS。&lt;&#x2F;p&gt;
+&lt;p&gt;首先想到的就是 NGINX，工作中用的比较多，之前为了部署 Bitwarden 也已经部署了。不过内心有点拒绝，总感觉 NGINX 有点太重了，也可能是工作中用的比较多，对它的语法感觉不是特别喜欢，尤其是转发指令各种潜规则，很容易犯错。抱着折腾一下的心态，用 Google 和 GPT 搜了下可选的方案，发现 Google 和 GPT 都推荐 Caddy。简单查了一些资料，发现跟配置方式跟 NGINX 挺像的，而且貌似更轻量级，配置也简化了不少。&lt;&#x2F;p&gt;
+&lt;p&gt;接下来直奔主题看下 HTTPS 怎么配置，我能想到的就是自签名证书的方式，所以重点看了相关的资料，Caddy 也的确支持。&lt;&#x2F;p&gt;
+&lt;p&gt;首先是证书生成：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;openssl&lt;&#x2F;span&gt;&lt;span&gt; req&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -x509 -nodes -days&lt;&#x2F;span&gt;&lt;span&gt; 365&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -newkey&lt;&#x2F;span&gt;&lt;span&gt; rsa:2048&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -keyout &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;n1.key&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -out &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;n1.crt&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -subj &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;CN=*.n1.to&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;然后修改 Caddyfile 来使用证书：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;auto_https&lt;&#x2F;span&gt;&lt;span&gt; off
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;log &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;        output file &#x2F;data&#x2F;caddy.log
+&lt;&#x2F;span&gt;&lt;span&gt;        level INFO
+&lt;&#x2F;span&gt;&lt;span&gt;        format console {
+&lt;&#x2F;span&gt;&lt;span&gt;            time_local
+&lt;&#x2F;span&gt;&lt;span&gt;            time_format wall_milli
+&lt;&#x2F;span&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;*.n1.to &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    tls &#x2F;ssl&#x2F;n1.crt &#x2F;ssl&#x2F;n1.key
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;https:&#x2F;&#x2F;chat.n1.to &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    reverse_proxy * chatgpt:3000
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;https:&#x2F;&#x2F;vault.n1.to &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    reverse_proxy * vaultwarden:80
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;配置后基本满足需求，能通过浏览器直接访问对应的域名，各个服务也能正常使用。但是有一点让我有点难受，Chrome 对于自签名证书每次重新打开的时候都会提示不安全，每次都需要点击一次确认才能使用。&lt;&#x2F;p&gt;
+&lt;p&gt;这时候求助万能的GPT，&lt;code&gt;caddy有其它方式支持内部域名https吗&lt;&#x2F;code&gt;，GPT 给出的答案中有一个&lt;strong&gt;内部CA颁发的证书&lt;&#x2F;strong&gt;的方案，专门去官网了解了下，发现 Caddy 可以通过 tls internal 的方式，直接使用内置的PKI 来颁发证书，而且配置非常的方便，只需要声明一个 tls internal，其它的 Caddy 帮你搞定。&lt;&#x2F;p&gt;
+&lt;p&gt;然后就是第二版的 Caddyfile：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;log &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;        output file &#x2F;data&#x2F;caddy.log
+&lt;&#x2F;span&gt;&lt;span&gt;        level INFO
+&lt;&#x2F;span&gt;&lt;span&gt;        format console {
+&lt;&#x2F;span&gt;&lt;span&gt;            time_local
+&lt;&#x2F;span&gt;&lt;span&gt;            time_format wall_milli
+&lt;&#x2F;span&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;*.n1.to &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    tls internal {
+&lt;&#x2F;span&gt;&lt;span&gt;        on_demand
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    @chat host chat.n1.to
+&lt;&#x2F;span&gt;&lt;span&gt;    handle @chat {
+&lt;&#x2F;span&gt;&lt;span&gt;        reverse_proxy * chatgpt:3000
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    @vault host vault.n1.to
+&lt;&#x2F;span&gt;&lt;span&gt;    handle @vault {
+&lt;&#x2F;span&gt;&lt;span&gt;        reverse_proxy * vaultwarden:80
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    handle {
+&lt;&#x2F;span&gt;&lt;span&gt;        abort
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里的核心就是 &lt;code&gt;tls internal&lt;&#x2F;code&gt; 这部分，Caddy 判断是内部tls 之后，会在请求指定域名的时候（比如 &lt;code&gt;chat.n1.to&lt;&#x2F;code&gt;），内部通过 local 的 ca 来请求证书并下发给浏览器，只要你把 Caddy 的 root.crt 的根证书安装，所有Caddy 颁发的子证书都是被信任的。这个时候你打开指定的域名就不会提示不安全，而且地址栏上的🔐也是绿色的。&lt;&#x2F;p&gt;
+&lt;p&gt;这里补充下Mac 上如何安装 &lt;code&gt;root.crt&lt;&#x2F;code&gt;：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; security add-trusted-cert&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -d -k&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;Library&#x2F;Keychains&#x2F;System.keychain &#x2F;path&#x2F;to&#x2F;root.crt
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;然后这个 &lt;code&gt;root.crt&lt;&#x2F;code&gt; 哪里来，在类Unix 的环境中，可以在 &lt;code&gt;$HOME&#x2F;.local&#x2F;share&#x2F;caddy&#x2F;pki&#x2F;authorities&#x2F;local&#x2F;root.crt&lt;&#x2F;code&gt; 中找到。&lt;&#x2F;p&gt;
+&lt;p&gt;整体折腾完感觉还是很满意的，而且发现了 Caddy 这么一个神器，后续想做一个简单的反向代理完全可以拿过来用。而且 Caddy 有一个非常方便的功能，如果你有一个外网域名，完成不需要自己申请tls 证书，Caddy 直接集成了Let’s Encrypt，自动帮你申请和续签证书，配置也很简单，感觉这才是新网关应该有的样子。&lt;&#x2F;p&gt;
+&lt;p&gt;配置参考：&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;caddyserver.com&#x2F;docs&#x2F;caddyfile&quot;&gt;caddyfile&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

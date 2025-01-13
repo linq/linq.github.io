@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh">
+    <title> - 技术</title>
+    <link href="https://linq.github.io/tags/ji-zhu/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://linq.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-04-07T00:00:00+00:00</updated>
+    <id>https://linq.github.io/tags/ji-zhu/atom.xml</id>
+    <entry xml:lang="zh">
+        <title>使用VNC远程连接Linux</title>
+        <published>2024-04-07T00:00:00+00:00</published>
+        <updated>2024-04-07T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/vnc-linux/" type="text/html"/>
+        <id>https://linq.github.io/posts/vnc-linux/</id>
+        
+        <content type="html">&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;vnc-linux&#x2F;linux-prompt.webp&quot; alt=&quot;linux-prompt&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;这周发现查资料用的远程windows server 连不上，其实之前就遇到过一次，貌似是因为window server 对远程登录的账号数量有限制，虽然可以通过修改注册表的方式绕过，但是用个半年就会出问题。&lt;&#x2F;p&gt;
+&lt;p&gt;这次想着优化下，用 Linux 远程桌面吧，虽然安装折腾点，但是毕竟是一次性成本，装好后就可以长期使用了，算下来还是值得的。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;debian-an-zhuang-tu-xing-jie-mian-he-vnc-server&quot;&gt;Debian 安装图形界面和 VNC server&lt;&#x2F;h2&gt;
+&lt;p&gt;正好阿里云ECS 文档上有教程，就&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;help.aliyun.com&#x2F;zh&#x2F;simple-application-server&#x2F;use-cases&#x2F;use-vnc-to-build-guis-on-ubuntu-18-04-and-20-04&quot;&gt;参考着安装&lt;&#x2F;a&gt;。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhang-hao-zhun-bei&quot;&gt;账号准备&lt;&#x2F;h3&gt;
+&lt;p&gt;因为每个 vnc 关联一个登录账号，需要先准备一个登录账号：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; adduser myuser
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; usermod&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -aG&lt;&#x2F;span&gt;&lt;span&gt; sudo myuser
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;getent&lt;&#x2F;span&gt;&lt;span&gt; group sudo myuser
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里创建了一个 myuser，并且添加到 sudo 组中。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;tu-xing-huan-jing-an-zhuang&quot;&gt;图形环境安装&lt;&#x2F;h3&gt;
+&lt;p&gt;因为是远程用，这里安装精简的 xfce 桌面。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; apt install xfce4 xfce4-goodies
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;vnc-server-an-zhuang-pei-zhi&quot;&gt;VNC server 安装配置&lt;&#x2F;h3&gt;
+&lt;p&gt;首先安装 vnc 软件包：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; apt install tigervnc-standalone-server tigervnc-common
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;然后设置登录密码：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;vncpasswd
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里会要确认密码选项，选择 n 就可以。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;pei-zhi-xstartup&quot;&gt;配置 xstartup&lt;&#x2F;h3&gt;
+&lt;p&gt;这里麻烦点，官方的教程可能太老了不适用，查了一些资料后终于解决了启动问题。
+添加 &lt;code&gt;$HOME&#x2F;.vnc&#x2F;xstartup&lt;&#x2F;code&gt;：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#!&#x2F;bin&#x2F;sh
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;XKL_XMODMAP_DISABLE&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;XDG_RUNTIME_DIR&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;run&#x2F;user&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;id -u&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;unset&lt;&#x2F;span&gt;&lt;span&gt; SESSION_MANAGER
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;unset&lt;&#x2F;span&gt;&lt;span&gt; DBUS_SESSION_BUS_ADDRESS
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;[ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;-x&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;etc&#x2F;vnc&#x2F;xstartup &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;] &lt;&#x2F;span&gt;&lt;span&gt;&amp;amp;&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;exec&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;etc&#x2F;vnc&#x2F;xstartup
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;[ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;-r &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HOME&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;.Xresources &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;] &lt;&#x2F;span&gt;&lt;span&gt;&amp;amp;&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;xrdb &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HOME&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;.Xresources
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;startxfce4
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;qi-dong-vnc-server&quot;&gt;启动 VNC server&lt;&#x2F;h3&gt;
+&lt;p&gt;直接执行以下命令即可启动一个vncserver 实例，如果要长期使用，建议加到 &lt;code&gt;.profile&lt;&#x2F;code&gt; 中间中：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;BROWSER&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;firefox
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;vncserver&lt;&#x2F;span&gt;&lt;span&gt; :1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -geometry&lt;&#x2F;span&gt;&lt;span&gt; 1280x720&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -depth&lt;&#x2F;span&gt;&lt;span&gt; 24&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -securitytypes&lt;&#x2F;span&gt;&lt;span&gt; VncAuth,TLSVnc
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里设置分辨率 1280x720，可以根据自己的需要调整，不过不建议调太高，尤其是公网访问的情况下，太高的分辨率卡顿很严重，我自己用 1080 试过，几乎卡成PPT 了。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;an-zhuang-zhong-wen-zi-ti&quot;&gt;安装中文字体&lt;&#x2F;h3&gt;
+&lt;p&gt;以上配置好后通过 VNC client 就可以连接上去了，默认启动的是 5900 + server_id 端口，比如第一个 server 就是 5901，通过vnc &lt;code&gt;ip:5901&lt;&#x2F;code&gt; 就可以远程连接使用。&lt;&#x2F;p&gt;
+&lt;p&gt;不过连上去如果打开中文网站会发现显示乱码，这个是因为没有中文字体支持，所以我们安装下中文字体：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; apt install fonts-wqy-zenhei fonts-wqy-microhei xfonts-wqy
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这样差不多就能正常访问了，记得安装firefox 浏览器，当然也可以安装其它的，不过需要记得修改 &lt;code&gt;export BROWSER=firefox&lt;&#x2F;code&gt; 配置，&lt;code&gt;xfce4&lt;&#x2F;code&gt; 默认通过该环境变量来启动浏览器。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;docker-vnc-linux&quot;&gt;Docker VNC Linux&lt;&#x2F;h2&gt;
+&lt;p&gt;上面的配置基本满足了远程Linux 访问需求，稍微有点麻烦的是每个用户登录上去都需要配置下vnc server 相关的配置。就想着都是通过vnc 访问，是否可以直接用docker 容器来启动linux 桌面呢，只要配置好一个docker 镜像，后续每个用户只要启动自己的容器即可。按照这个思路在Google 上搜了下还真现成的镜像 &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;edgelevel&#x2F;alpine-xfce-vnc&quot;&gt;alpine-xfce-vnc&lt;&#x2F;a&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;这里贴下使用方式：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# pull latest image
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;docker&lt;&#x2F;span&gt;&lt;span&gt; run&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --rm &lt;&#x2F;span&gt;&lt;span&gt;\
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;  -p&lt;&#x2F;span&gt;&lt;span&gt; 5900:5900&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -p&lt;&#x2F;span&gt;&lt;span&gt; 6080:6080 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;  --name&lt;&#x2F;span&gt;&lt;span&gt; alpine-xfce-vnc \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;  --hostname&lt;&#x2F;span&gt;&lt;span&gt; alpine \
+&lt;&#x2F;span&gt;&lt;span&gt;  edgelevel&#x2F;alpine-xfce-vnc
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;可以看到使用非常的方便，一个docker 命令搞定，而且启动非常的快。支持 VNC 和 noVNC 两种方式访问。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;vnc-linux&#x2F;tigervnc.webp&quot; alt=&quot;tigervnc&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;这个docker 镜像是基于alpine 制作的，对于中文乱码，打开终端安装中文字体即可解决：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;apk&lt;&#x2F;span&gt;&lt;span&gt; add font-wqy-zenhei
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;shi-yong-docker-firefox&quot;&gt;使用 docker-firefox&lt;&#x2F;h2&gt;
+&lt;p&gt;上面docker 的方案已经很方便了，但是个人稍微有点强迫症，感觉linux 中除了浏览器其它的软件都不需要，尤其是状态栏，壁纸相关，不仅占空间而且会额外影响vnc 的传输效率。基本想法是也不需要安装 &lt;code&gt;xfce4&lt;&#x2F;code&gt; 桌面了，直接安装一个浏览器就可以。然后找到了 &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;jlesage&#x2F;docker-firefox&quot;&gt;docker-firefox&lt;&#x2F;a&gt; 项目。&lt;&#x2F;p&gt;
+&lt;p&gt;该项目其实跟上面的 docker vnc linux 方案差别不大，只是没有安装完整的桌面，使用了精简的 &lt;code&gt;icewm&lt;&#x2F;code&gt;，整个容器启动后就是一个浏览器的桌面，非常的简洁。&lt;&#x2F;p&gt;
+&lt;p&gt;启动命令：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;docker&lt;&#x2F;span&gt;&lt;span&gt; run&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -d &lt;&#x2F;span&gt;&lt;span&gt;\
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    --name&lt;&#x2F;span&gt;&lt;span&gt;=firefox \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -p&lt;&#x2F;span&gt;&lt;span&gt; 5800:5800 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -v&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;docker&#x2F;appdata&#x2F;firefox:&#x2F;config:rw \
+&lt;&#x2F;span&gt;&lt;span&gt;    jlesage&#x2F;firefox
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里面还有挺多参数可以配置，包括语言、分辨率还有字体等，如果想开箱即用可以用如下命令启动：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;docker&lt;&#x2F;span&gt;&lt;span&gt; run&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -d &lt;&#x2F;span&gt;&lt;span&gt;\
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    --name&lt;&#x2F;span&gt;&lt;span&gt;=firefox \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -e&lt;&#x2F;span&gt;&lt;span&gt; DISPLAY_WIDTH=1280 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -e&lt;&#x2F;span&gt;&lt;span&gt; DISPLAY_HEIGHT=900 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -e&lt;&#x2F;span&gt;&lt;span&gt; LANG=zh_CN.UTF-8 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -e&lt;&#x2F;span&gt;&lt;span&gt; TZ=Asia&#x2F;Shanghai \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -e&lt;&#x2F;span&gt;&lt;span&gt; ENABLE_CJK_FONT=1 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -p&lt;&#x2F;span&gt;&lt;span&gt; 5800:5800 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -p&lt;&#x2F;span&gt;&lt;span&gt; 5900:5900 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -v &lt;&#x2F;span&gt;&lt;span&gt;`&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;pwd&lt;&#x2F;span&gt;&lt;span&gt;`&#x2F;firefox:&#x2F;config:rw \
+&lt;&#x2F;span&gt;&lt;span&gt;    jlesage&#x2F;firefox
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;vnc-linux&#x2F;docker-firefox.webp&quot; alt=&quot;docker-firefox&quot; &#x2F;&gt;
+&lt;code&gt;ip:5800&lt;&#x2F;code&gt; 通过浏览器 &lt;code&gt;noVNC&lt;&#x2F;code&gt; 访问，&lt;code&gt;ip:5900&lt;&#x2F;code&gt; 通过vnc client 访问，推荐通过client 的方式访问，浏览器快捷键操作容器不小心就退出了。&lt;&#x2F;p&gt;
+&lt;p&gt;这里有个问题没有解决，系统剪切板共享中文的时候是乱码，&lt;code&gt;GitHub&lt;&#x2F;code&gt; 上搜了下也没看到解决方案，后续再研究看看。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>使用Caddy配置内网HTTPS</title>
+        <published>2024-03-31T00:00:00+00:00</published>
+        <updated>2024-03-31T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/caddy/" type="text/html"/>
+        <id>https://linq.github.io/posts/caddy/</id>
+        
+        <content type="html">&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;1128849&#x2F;210187356-dfb7f1c5-ac2e-43aa-bb23-fc014280ae1f.svg&quot; alt=&quot;Caddy&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;NAS 上通过 Docker 部署的服务越来越多，每次都是通过独立的端口开放出来，虽然也可以用，但是每次都需要 IP 感觉很麻烦。这周又搞了两个新的服务部署上去，尤其其中一个通过 IP 来使用还有点问题，就调研了下怎么折腾内网的HTTPS。&lt;&#x2F;p&gt;
+&lt;p&gt;首先想到的就是 NGINX，工作中用的比较多，之前为了部署 Bitwarden 也已经部署了。不过内心有点拒绝，总感觉 NGINX 有点太重了，也可能是工作中用的比较多，对它的语法感觉不是特别喜欢，尤其是转发指令各种潜规则，很容易犯错。抱着折腾一下的心态，用 Google 和 GPT 搜了下可选的方案，发现 Google 和 GPT 都推荐 Caddy。简单查了一些资料，发现跟配置方式跟 NGINX 挺像的，而且貌似更轻量级，配置也简化了不少。&lt;&#x2F;p&gt;
+&lt;p&gt;接下来直奔主题看下 HTTPS 怎么配置，我能想到的就是自签名证书的方式，所以重点看了相关的资料，Caddy 也的确支持。&lt;&#x2F;p&gt;
+&lt;p&gt;首先是证书生成：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;openssl&lt;&#x2F;span&gt;&lt;span&gt; req&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -x509 -nodes -days&lt;&#x2F;span&gt;&lt;span&gt; 365&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -newkey&lt;&#x2F;span&gt;&lt;span&gt; rsa:2048&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -keyout &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;n1.key&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -out &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;n1.crt&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -subj &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;CN=*.n1.to&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;然后修改 Caddyfile 来使用证书：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;auto_https&lt;&#x2F;span&gt;&lt;span&gt; off
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;log &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;        output file &#x2F;data&#x2F;caddy.log
+&lt;&#x2F;span&gt;&lt;span&gt;        level INFO
+&lt;&#x2F;span&gt;&lt;span&gt;        format console {
+&lt;&#x2F;span&gt;&lt;span&gt;            time_local
+&lt;&#x2F;span&gt;&lt;span&gt;            time_format wall_milli
+&lt;&#x2F;span&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;*.n1.to &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    tls &#x2F;ssl&#x2F;n1.crt &#x2F;ssl&#x2F;n1.key
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;https:&#x2F;&#x2F;chat.n1.to &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    reverse_proxy * chatgpt:3000
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;https:&#x2F;&#x2F;vault.n1.to &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    reverse_proxy * vaultwarden:80
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;配置后基本满足需求，能通过浏览器直接访问对应的域名，各个服务也能正常使用。但是有一点让我有点难受，Chrome 对于自签名证书每次重新打开的时候都会提示不安全，每次都需要点击一次确认才能使用。&lt;&#x2F;p&gt;
+&lt;p&gt;这时候求助万能的GPT，&lt;code&gt;caddy有其它方式支持内部域名https吗&lt;&#x2F;code&gt;，GPT 给出的答案中有一个&lt;strong&gt;内部CA颁发的证书&lt;&#x2F;strong&gt;的方案，专门去官网了解了下，发现 Caddy 可以通过 tls internal 的方式，直接使用内置的PKI 来颁发证书，而且配置非常的方便，只需要声明一个 tls internal，其它的 Caddy 帮你搞定。&lt;&#x2F;p&gt;
+&lt;p&gt;然后就是第二版的 Caddyfile：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;log &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;        output file &#x2F;data&#x2F;caddy.log
+&lt;&#x2F;span&gt;&lt;span&gt;        level INFO
+&lt;&#x2F;span&gt;&lt;span&gt;        format console {
+&lt;&#x2F;span&gt;&lt;span&gt;            time_local
+&lt;&#x2F;span&gt;&lt;span&gt;            time_format wall_milli
+&lt;&#x2F;span&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;*.n1.to &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    tls internal {
+&lt;&#x2F;span&gt;&lt;span&gt;        on_demand
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    @chat host chat.n1.to
+&lt;&#x2F;span&gt;&lt;span&gt;    handle @chat {
+&lt;&#x2F;span&gt;&lt;span&gt;        reverse_proxy * chatgpt:3000
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    @vault host vault.n1.to
+&lt;&#x2F;span&gt;&lt;span&gt;    handle @vault {
+&lt;&#x2F;span&gt;&lt;span&gt;        reverse_proxy * vaultwarden:80
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    handle {
+&lt;&#x2F;span&gt;&lt;span&gt;        abort
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里的核心就是 &lt;code&gt;tls internal&lt;&#x2F;code&gt; 这部分，Caddy 判断是内部tls 之后，会在请求指定域名的时候（比如 &lt;code&gt;chat.n1.to&lt;&#x2F;code&gt;），内部通过 local 的 ca 来请求证书并下发给浏览器，只要你把 Caddy 的 root.crt 的根证书安装，所有Caddy 颁发的子证书都是被信任的。这个时候你打开指定的域名就不会提示不安全，而且地址栏上的🔐也是绿色的。&lt;&#x2F;p&gt;
+&lt;p&gt;这里补充下Mac 上如何安装 &lt;code&gt;root.crt&lt;&#x2F;code&gt;：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; security add-trusted-cert&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -d -k&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;Library&#x2F;Keychains&#x2F;System.keychain &#x2F;path&#x2F;to&#x2F;root.crt
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;然后这个 &lt;code&gt;root.crt&lt;&#x2F;code&gt; 哪里来，在类Unix 的环境中，可以在 &lt;code&gt;$HOME&#x2F;.local&#x2F;share&#x2F;caddy&#x2F;pki&#x2F;authorities&#x2F;local&#x2F;root.crt&lt;&#x2F;code&gt; 中找到。&lt;&#x2F;p&gt;
+&lt;p&gt;整体折腾完感觉还是很满意的，而且发现了 Caddy 这么一个神器，后续想做一个简单的反向代理完全可以拿过来用。而且 Caddy 有一个非常方便的功能，如果你有一个外网域名，完成不需要自己申请tls 证书，Caddy 直接集成了Let’s Encrypt，自动帮你申请和续签证书，配置也很简单，感觉这才是新网关应该有的样子。&lt;&#x2F;p&gt;
+&lt;p&gt;配置参考：&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;caddyserver.com&#x2F;docs&#x2F;caddyfile&quot;&gt;caddyfile&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>使用rclone备份知识库</title>
+        <published>2024-03-10T00:00:00+00:00</published>
+        <updated>2024-03-10T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/rclone-backup-knowledge/" type="text/html"/>
+        <id>https://linq.github.io/posts/rclone-backup-knowledge/</id>
+        
+        <content type="html">&lt;p&gt;一直使用 &lt;code&gt;Obsidian&lt;&#x2F;code&gt; 管理个人的知识库，然后配合 &lt;code&gt;syncthing&lt;&#x2F;code&gt; 进行多台设置之间的同步。近期同步的时候发现整个知识库的文件大小已经达到 2GB，对于如此核心的资产，貌似容灾做的很不够。&lt;&#x2F;p&gt;
+&lt;p&gt;现在的核心数据是存放在 N1 小 NAS 上挂载的移动硬盘上，然后通过 Syncthing 同步到家里的电脑和公司的电脑上，暂且可以认为有 3 个备份。这里有两个痛点，首先服务器上的数据是在移动硬盘上的，感觉不是很保险，如果什么时候突然出现故障，估计数据要找回是个很大的问题。然后就是两台电脑上的数据只是为了写作用，不会时刻跟服务器上保持同步，一般是写完一些内容提交下，可能会有 1 到 2 天的延迟。&lt;&#x2F;p&gt;
+&lt;p&gt;在考虑好要做备份后，我首先想到的就是同步到云盘，毕竟本地虽然方便，但是要自己做好数据保护，放到云上就可以让对应的服务商帮你搞定这一切。云盘第一个想到的就是自己用的比较多的阿里云盘，另外是国内能正常访问的 &lt;code&gt;onedrive&lt;&#x2F;code&gt;。定好存储后就是如何同步上去，网上搜了下后大致确认使用 &lt;code&gt;rclone&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;初步写了个脚本实现定时同步。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#!&#x2F;bin&#x2F;sh
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Define the source and destination
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;SOURCE&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;backup&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;DESTINATION&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:&#x2F;Backup&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Define the list of flags
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;providers&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;aliyun onedrive&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Infinite loop
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;while &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; provider &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;providers&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
+&lt;&#x2F;span&gt;&lt;span&gt;		&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Record the start time of the synchronization
+&lt;&#x2F;span&gt;&lt;span&gt;		&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;provider&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;] Sync started at &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;date&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;		&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Run rclone command
+&lt;&#x2F;span&gt;&lt;span&gt;		&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rclone -v --config&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;data&#x2F;rclone.conf sync &amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;SOURCE&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;provider&lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;DESTINATION&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --exclude-from&lt;&#x2F;span&gt;&lt;span&gt; exclude-file.txt
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;		&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Record the end time of the synchronization
+&lt;&#x2F;span&gt;&lt;span&gt;		&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;provider&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;] Sync completed at &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;date&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;done
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Sleep for 10 minutes
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sleep&lt;&#x2F;span&gt;&lt;span&gt; 600
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;done
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;不过在跑了一个晚上后发现一个很大的问题，阿里云盘竟然每次都跑的时候都会同步。然后去翻 &lt;code&gt;rclone&lt;&#x2F;code&gt; 的官方文档，发现是 &lt;code&gt;Webdav&lt;&#x2F;code&gt; 协议本身不支持将文件的元数据同步到服务端。不过 &lt;code&gt;rclone&lt;&#x2F;code&gt; 做了扩展，可以通过 &lt;code&gt;X-OC-Mtime&lt;&#x2F;code&gt; 头来支持，但是需要 &lt;code&gt;Webdav&lt;&#x2F;code&gt; 服务商能识别该 header。然后我去 &lt;code&gt;Alist&lt;&#x2F;code&gt; 的 GitHub 找 issues，没想到还真兼容，但是我在修改 &lt;code&gt;Webdav&lt;&#x2F;code&gt; 服务器和 &lt;code&gt;rclone&lt;&#x2F;code&gt; 的 vender 之后，发现还是一样的问题。然后再去确认，发现阿里云盘竟然又&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;alist-org&#x2F;alist&#x2F;issues&#x2F;4938&quot;&gt;不支持&lt;&#x2F;a&gt;了😂。&lt;&#x2F;p&gt;
+&lt;p&gt;没办法放弃阿里云盘，但是觉得一家不保险，就考虑加个 Google Drive 吧，考虑到 Google Drive 需要魔法上网，把脚本改成可以配置的方式。同时觉得一直傻轮询的方式很蠢，网上找了个 rust 的 watchexec 来监控文件变化，有变更的时候再执行脚本，基本实现了自己的需求。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#!&#x2F;bin&#x2F;sh
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Proxy 配置
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROXY&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;http:&#x2F;&#x2F;xx:xx@127.0.0.1:5678&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# 请替换成你的代理服务器和端口
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# provider 配置，格式为：&amp;quot;provider_name=true|false&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROVIDERS&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;onedrive=false
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;gdrive=true&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;log&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;date &lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;+%Y&#x2F;%m&#x2F;%d %H:%M:%S&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;) INFO  : &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;setup_proxy&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;http_proxy&lt;&#x2F;span&gt;&lt;span&gt;=$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROXY
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;https_proxy&lt;&#x2F;span&gt;&lt;span&gt;=$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROXY
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;log &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Enable Proxy for &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;unset_proxy&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;unset&lt;&#x2F;span&gt;&lt;span&gt; http_proxy
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;unset&lt;&#x2F;span&gt;&lt;span&gt; https_proxy
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;log &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Disable Proxy for &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;rclone_command&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;provider&lt;&#x2F;span&gt;&lt;span&gt;=$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;1
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# 这里应该是你要执行的rclone命令
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;log &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Start rclone for provider: &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;provider&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# 此处添加你的rclone命令，例如：
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rclone -v --config&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;data&#x2F;rclone.conf sync &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;backup&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;provider&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:&#x2F;Backup&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --exclude-from&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;data&#x2F;exclude-file.txt
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;log &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Finish rclone for provider: &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;provider&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# 读取并处理每一个provider的配置
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROVIDERS&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; | &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;while &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;IFS&lt;&#x2F;span&gt;&lt;span&gt;=&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39; read&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -r&lt;&#x2F;span&gt;&lt;span&gt; provider proxy_enabled; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;[ &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;proxy_enabled&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; = &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;then
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;setup_proxy &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;provider&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rclone_command &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;provider&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;unset_proxy &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;provider&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;else
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rclone_command &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;provider&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fi
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;log &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;---------------------------------------&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;done
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;以上的脚本基本实现了想要的功能，不过在了解 watchexec 之后，我发现 watchexec 原来可以将变更文件输出，这样其实配合 rclone 的 &lt;code&gt;--filter-from&lt;&#x2F;code&gt; 参数其实是可以实现客户端的增量同步的，也就能解决 webdav 的每次都同步问题。不过这个脚本得配合着一些改动，况且感觉现在也够用了，后续有新的需求的时候再考虑修改下。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>Obsidian制作Anki卡片</title>
+        <published>2024-02-04T00:00:00+00:00</published>
+        <updated>2024-02-04T00:00:00+00:00</updated>
+        <author>
+          <name>fancylinq</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/markdown-to-anki/" type="text/html"/>
+        <id>https://linq.github.io/posts/markdown-to-anki/</id>
+        
+        <content type="html">&lt;p&gt;近期一直在用Anki几点东西，但是Anki制卡的过程太繁琐，之前一直在用Obsidian仓库的 &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ObsidianToAnki&#x2F;Obsidian_to_Anki&quot;&gt;Obsidian_to_Anki&lt;&#x2F;a&gt;制卡，整体上还是不错的，但是也有几个让人不太满意的地方。&lt;&#x2F;p&gt;
+&lt;p&gt;一是 Obsidian_to_Anki 每次同步是整个Vault全量扫描同步，这个如果笔记多就会很慢。为了解决这个问题，我专门开了一个 Anki的Vault出来算是勉强绕过去。但实际情况是即使单独的Vault，如果卡片笔记足够多每次同步还是很慢。&lt;&#x2F;p&gt;
+&lt;p&gt;第二个问题就是有些卡片同步不了，这个是真的让我想自己折腾的直接原因。也不知道啥原因同样的制卡笔记，有时候同步不了，但是下一次可能又行了，还有一些是怎么折腾都同步不了。这个是真的搞的我很不爽，为了搞定这个还专门把 Obsidian_to_Anki 的源码翻了下也没看到多少端倪。Obsidian_to_Anki 为了通用大量用了正则做匹配替换，这里排查起来就很头疼，我对JavaScript又不是很熟，也想通过改正则来解决，最后也没搞定。&lt;&#x2F;p&gt;
+&lt;p&gt;前两天搞的烦了就想为啥不自己弄，我又不需要做一个通用工具，只要按照自己的需求简单实现就好了。我的制卡笔记也非常的简单，简单的文本查找应该就能搞定。&lt;&#x2F;p&gt;
+&lt;p&gt;决定之后就是实现了，为了简单肯定用python了，但是我python也不是太熟😹。不过不是还有GPT吗，通过一个prompt把核心代码就生成好了。&lt;&#x2F;p&gt;
+&lt;p&gt;代码生成Prompt：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;markdown&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-markdown &quot;&gt;&lt;code class=&quot;language-markdown&quot; data-lang=&quot;markdown&quot;&gt;&lt;span&gt;I want you to act as a computer expert，your task is to write python code to extract flash card from markdown and send it to anki. 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;## steps:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;1. extract front and back value from markdown file path
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;2. if content matches &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;`![xxx]`&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;, you should extract xxx value
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;2. convert front and back value to html, replace &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;`![xxx]`&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; to &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;`&amp;lt;img src=&amp;#39;xxx&amp;#39; &#x2F;&amp;gt;`
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;3. connect to anki with ankiconnect
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;3. create Basic card with front and back value
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;## markdown content example
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;观放白鹰二首 
+&lt;&#x2F;span&gt;&lt;span&gt;唐⋅ 李白 #flashcard 
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;【其一】 
+&lt;&#x2F;span&gt;&lt;span&gt;八月边风高，胡鹰白锦毛。 
+&lt;&#x2F;span&gt;&lt;span&gt;孤飞一片雪，百里见秋毫。 
+&lt;&#x2F;span&gt;&lt;span&gt;【其二】 
+&lt;&#x2F;span&gt;&lt;span&gt;寒冬十二月，苍鹰八九毛。 
+&lt;&#x2F;span&gt;&lt;span&gt;寄言燕雀莫相啅，自有云霄万里高。
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;background-color:#4f5b66;color:#c0c5ce;&quot;&gt;---
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;十一月四日风雨大作（其一）
+&lt;&#x2F;span&gt;&lt;span&gt;宋⋅ 陆游 #flashcard 
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;风卷江湖雨暗村，四山声作海涛翻。 
+&lt;&#x2F;span&gt;&lt;span&gt;溪柴火软蛮毡暖，我与狸奴不出门。
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;---&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;```
+&lt;&#x2F;span&gt;&lt;span style=&quot;background-color:#bf616a;color:#2b303b;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;## attention
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;1. markdown contains multiple cards seperate by &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;`---`
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;2. content before &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;`#flashcard`&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; is front value, after is back value
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;3. back value is markdown text, you should convert it to html
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;生成的代码整体质量还不错，简单修复一些问题后已经达到能用的状态了。不过生成的python代码太过程试有点不是很满意，又让GPT重构成更简洁和面向对象的风格，同时增加参数解析。最终生成的代码效果还不错，感觉让我自己来写这个代码可能还没它写的好😛。&lt;&#x2F;p&gt;
+&lt;p&gt;脚本的执行效果：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;usage:&lt;&#x2F;span&gt;&lt;span&gt; anki2.py &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;-h&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;] [&lt;&#x2F;span&gt;&lt;span&gt;--deck_name DECK_NAME&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;] [&lt;&#x2F;span&gt;&lt;span&gt;--model_name MODEL_NAME&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;] [&lt;&#x2F;span&gt;&lt;span&gt;--debug&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt; vault_path note_path
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Sync&lt;&#x2F;span&gt;&lt;span&gt; Obsidian flashcards with Anki
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;positional&lt;&#x2F;span&gt;&lt;span&gt; arguments:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;vault_path&lt;&#x2F;span&gt;&lt;span&gt;            The file path to the Obsidian vault
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;note_path&lt;&#x2F;span&gt;&lt;span&gt;             The path to the note folder within the vault
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;options:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;-h, --help&lt;&#x2F;span&gt;&lt;span&gt;            show this help message and exit
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;--deck_name&lt;&#x2F;span&gt;&lt;span&gt; DECK_NAME
+&lt;&#x2F;span&gt;&lt;span&gt;                        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;The&lt;&#x2F;span&gt;&lt;span&gt; name of the Anki deck (optional)
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;--model_name&lt;&#x2F;span&gt;&lt;span&gt; MODEL_NAME
+&lt;&#x2F;span&gt;&lt;span&gt;                        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;The&lt;&#x2F;span&gt;&lt;span&gt; name of the Anki model (optional)
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;--debug&lt;&#x2F;span&gt;&lt;span&gt;               Enable debug logging
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;markdown-to-anki&#x2F;anki_card.webp&quot; alt=&quot;anki_card&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Code：&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;linq&#x2F;markdown-to-anki&#x2F;tree&#x2F;main&quot;&gt;markdown-to-anki&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>
