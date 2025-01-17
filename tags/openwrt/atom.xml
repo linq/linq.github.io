@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh">
+    <title> - openwrt</title>
+    <link href="https://linq.github.io/tags/openwrt/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://linq.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-02-21T00:00:00+00:00</updated>
+    <id>https://linq.github.io/tags/openwrt/atom.xml</id>
+    <entry xml:lang="zh">
+        <title>OpenWrt Docker软路由</title>
+        <published>2024-02-21T00:00:00+00:00</published>
+        <updated>2024-02-21T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/openwrt/" type="text/html"/>
+        <id>https://linq.github.io/posts/openwrt/</id>
+        
+        <content type="html">&lt;p&gt;半年前用 N1 配合 OpenWrt 搭建了软路由，也稳定运行了半年。这周心血来潮想折腾其他的上网方式，把 OpenWrt 软路由升级了下，中间的步骤也不少，正好记录下。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;docker-zhun-bei&quot;&gt;Docker 准备&lt;&#x2F;h2&gt;
+&lt;p&gt;首先是 docker 环境准备，这个现在一般 NAS 啥的都自带，我用的 &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ophub&#x2F;amlogic-s9xxx-armbian&#x2F;tree&#x2F;main&quot;&gt;Armbian&lt;&#x2F;a&gt; 也是，除了修改下镜像加速也没啥改动。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;daemon.json&lt;&#x2F;code&gt; 增加 registry-mirrors&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;  &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;registry-mirrors&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; [
+&lt;&#x2F;span&gt;&lt;span&gt;    &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;https:&#x2F;&#x2F;dockerproxy.com&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;]
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;wang-luo-zhun-bei&quot;&gt;网络准备&lt;&#x2F;h2&gt;
+&lt;p&gt;打开网卡混杂模式&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; ip link set eth0 promisc on
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;创建 macvlan 虚拟网卡&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;docker&lt;&#x2F;span&gt;&lt;span&gt; network create&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -d&lt;&#x2F;span&gt;&lt;span&gt; macvlan&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --subnet&lt;&#x2F;span&gt;&lt;span&gt;=192.168.xxx.0&#x2F;24&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --gateway&lt;&#x2F;span&gt;&lt;span&gt;=192.168.xxx.yyy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -o&lt;&#x2F;span&gt;&lt;span&gt; parent=eth0 macnet
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;openwrt-jing-xiang-zhun-bei&quot;&gt;OpenWrt 镜像准备&lt;&#x2F;h2&gt;
+&lt;p&gt;这里推荐两个：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;hub.docker.com&#x2F;r&#x2F;ophub&#x2F;openwrt-aarch64&quot;&gt;ophub&#x2F;openwrt-aarch64&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;hub.docker.com&#x2F;r&#x2F;piaoyizy&#x2F;openwrt-aarch64&quot;&gt;piaoyizy&#x2F;openwrt-aarch64&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;如果要清爽干净可是使用第一个，如果有魔法上网需求选择第二个，使用上都没有区别&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;qi-dong-openwrt-bing-pei-zhi-wang-luo&quot;&gt;启动 OpenWrt 并配置网络&lt;&#x2F;h2&gt;
+&lt;p&gt;首先启动容器&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;docker&lt;&#x2F;span&gt;&lt;span&gt; run&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -d --name&lt;&#x2F;span&gt;&lt;span&gt;=openwrt&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --network&lt;&#x2F;span&gt;&lt;span&gt; macnet&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --privileged --restart&lt;&#x2F;span&gt;&lt;span&gt; always ophub&#x2F;openwrt-aarch64:latest
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;进入 OpenWrt&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;docker&lt;&#x2F;span&gt;&lt;span&gt; exec&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -it&lt;&#x2F;span&gt;&lt;span&gt; openwrt bash
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;修改 IP、网关、DNS 等&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;vi&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;etc&#x2F;config&#x2F;network
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;修改完重启 OpenWrt 网络&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;&#x2F;etc&#x2F;init.d&#x2F;network&lt;&#x2F;span&gt;&lt;span&gt; restart
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;ruan-lu-you-she-zhi&quot;&gt;软路由设置&lt;&#x2F;h2&gt;
+&lt;p&gt;上面执行完成后就可以通过 ip 登陆软路由，输入密码后进行相关的设置。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;lan-jie-kou-she-zhi&quot;&gt;LAN 接口设置&lt;&#x2F;h3&gt;
+&lt;p&gt;进入 &lt;code&gt;网络 - 接口 - LAN&lt;&#x2F;code&gt;，执行以下修改&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;关闭 DHCP&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;IPv4 网关&lt;&#x2F;code&gt;和 &lt;code&gt;DNS 服务器&lt;&#x2F;code&gt;都填写主路由地址&lt;&#x2F;li&gt;
+&lt;li&gt;在&lt;code&gt;物理设置&lt;&#x2F;code&gt;中，取消&lt;code&gt;桥接接口&lt;&#x2F;code&gt;选项&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h3 id=&quot;fang-huo-qiang-she-zhi&quot;&gt;防火墙设置&lt;&#x2F;h3&gt;
+&lt;p&gt;进入 &lt;code&gt;网络 - 防火墙 - 自定义规则&lt;&#x2F;code&gt;，添加&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;iptables -t&lt;&#x2F;span&gt;&lt;span&gt; nat&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -I&lt;&#x2F;span&gt;&lt;span&gt; POSTROUTING&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -o&lt;&#x2F;span&gt;&lt;span&gt; eth0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -j&lt;&#x2F;span&gt;&lt;span&gt; MASQUERADE
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;修改后重启防火墙&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;armbian-she-zhi-ke-xuan&quot;&gt;Armbian 设置 (可选)&lt;&#x2F;h2&gt;
+&lt;p&gt;对于使用 Armbian，实现和 OpenWrt 互相访问
+修改 &lt;code&gt;&#x2F;etc&#x2F;network&#x2F;interfaces&lt;&#x2F;code&gt;，增加&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;auto&lt;&#x2F;span&gt;&lt;span&gt; macvlan
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;iface&lt;&#x2F;span&gt;&lt;span&gt; macvlan inet dhcp
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;pre-up&lt;&#x2F;span&gt;&lt;span&gt; ip link add macvlan link eth0 type macvlan mode bridge
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;post-down&lt;&#x2F;span&gt;&lt;span&gt; ip link del macvlan link eth0 type macvlan mode bridge
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;openclash-she-zhi&quot;&gt;OpenClash 设置&lt;&#x2F;h2&gt;
+&lt;p&gt;对于需要 OpenClash 魔法上网的，首次添加订阅大概率无法启动。查看日志会发现是因为 clash 内核无法下载，所以需要先下载内核。&lt;&#x2F;p&gt;
+&lt;p&gt;进入 &lt;code&gt;OpenClash - 插件设置 - 版本更新&lt;&#x2F;code&gt;，在 Dev 内核中点击下载，可以把内核先下载到本地。&lt;&#x2F;p&gt;
+&lt;p&gt;ssh 登陆 OpenClash 并上传 clash 内核到 &lt;code&gt;&#x2F;etc&#x2F;openclash&#x2F;core&lt;&#x2F;code&gt;，可能会没有文件夹记得创建，然后修改文件权限&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;chmod&lt;&#x2F;span&gt;&lt;span&gt; 0700 clash  
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;chown&lt;&#x2F;span&gt;&lt;span&gt; nobody:nogroup clash
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;修改后重启 OpenClash 应该就可以了&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

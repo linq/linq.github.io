@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh">
+    <title> - 阅读</title>
+    <link href="https://linq.github.io/tags/yue-du/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://linq.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-02-11T00:00:00+00:00</updated>
+    <id>https://linq.github.io/tags/yue-du/atom.xml</id>
+    <entry xml:lang="zh">
+        <title>读凤凰架构</title>
+        <published>2024-02-11T00:00:00+00:00</published>
+        <updated>2024-02-11T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/read-fenix/" type="text/html"/>
+        <id>https://linq.github.io/posts/read-fenix/</id>
+        
+        <content type="html">&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;res.weread.qq.com&#x2F;wrepub&#x2F;CB_A9ACwaCvp8i56iD6gZ5LZ0Cu_parsecover&quot; alt=&quot;凤凰架构&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;这周把「&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;book.douban.com&#x2F;subject&#x2F;35492898&#x2F;&quot;&gt;凤凰架构&lt;&#x2F;a&gt;」看完，感觉应该是近期读过的关于架构方面最好的书了。&lt;&#x2F;p&gt;
+&lt;p&gt;主要几个方便让我觉得挺不错：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;文笔，&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;book.douban.com&#x2F;search&#x2F;%E5%91%A8%E5%BF%97%E6%98%8E&quot;&gt;周志明&lt;&#x2F;a&gt;老师的文笔真的没话说，复杂的概念也能讲的简单易懂，完全没有普通架构书的死板，有时候还能有一些网络用语感觉非常的接地气&lt;&#x2F;li&gt;
+&lt;li&gt;相关技术架构的发展历史，能把一项技术的前因后果讲清楚，也更容易读者的理解和学习，人都是有好奇心（八卦）的，多了解一点也更容易记住&lt;&#x2F;li&gt;
+&lt;li&gt;凤凰架构的观点，比如：系统每一个部件都可以看作是一只不死鸟（Phoenix），都能涅槃重生；架构演变是为了方便某个服务能够顺利地“死去”与“重生”而设计，这些观点都能让启发思考，而不是千篇一律&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;其实感觉这本书有点被书名耽搁了，挺早之前就被安利过，但是当时看到这个名字就觉得很俗气，心里有个大概判断就没继续了。后来应该是在极客时间看到了「周志明的软件架构课」，发现讲的就是「凤凰架构」，然后大概去豆瓣搜了下，貌似评分还挺好的，才有后来的继续阅读。现在再看凤凰两个字，的确像周志明老师在书中说的，这个词东方人不常用，但是在西方的软件工程读物是比较多出现的。&lt;&#x2F;p&gt;
+&lt;p&gt;我觉得这本书比较好的一点是把软件架构的很多的技术都统一梳理了一下，包括RPC，分布式事务，容器编排等，可能不是那么的细，但是对于一个想了解架构但是不知如何下手的人来说，是一本非常好的入门参考书。在整体了解的基础上，对于其中一些感觉不熟悉，或者想深入了解的，可以作为一个引子，再找一些相关资料补充，对于掌握相关的技术应该也是有很大的益处的。&lt;&#x2F;p&gt;
+&lt;p&gt;现在第一遍看完有点意犹未尽，主要是感觉自己在被动接收观点，没有跟周志明老师讨论的机会，在发现凤凰架构有一个&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;icyfenix.cn&#x2F;&quot;&gt;官方网站&lt;&#x2F;a&gt;后，我准备再走读一边，也结合极客时间的「周志明的软件架构课」，主要想看看里面的评论，或者自己也参与一起讨论，想更有参考感的一起学习，希望能有更多的收获。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

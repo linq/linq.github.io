@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh">
+    <title> - Docker</title>
+    <link href="https://linq.github.io/tags/docker/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://linq.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-04-07T00:00:00+00:00</updated>
+    <id>https://linq.github.io/tags/docker/atom.xml</id>
+    <entry xml:lang="zh">
+        <title>使用VNC远程连接Linux</title>
+        <published>2024-04-07T00:00:00+00:00</published>
+        <updated>2024-04-07T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/vnc-linux/" type="text/html"/>
+        <id>https://linq.github.io/posts/vnc-linux/</id>
+        
+        <content type="html">&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;vnc-linux&#x2F;linux-prompt.webp&quot; alt=&quot;linux-prompt&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;这周发现查资料用的远程windows server 连不上，其实之前就遇到过一次，貌似是因为window server 对远程登录的账号数量有限制，虽然可以通过修改注册表的方式绕过，但是用个半年就会出问题。&lt;&#x2F;p&gt;
+&lt;p&gt;这次想着优化下，用 Linux 远程桌面吧，虽然安装折腾点，但是毕竟是一次性成本，装好后就可以长期使用了，算下来还是值得的。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;debian-an-zhuang-tu-xing-jie-mian-he-vnc-server&quot;&gt;Debian 安装图形界面和 VNC server&lt;&#x2F;h2&gt;
+&lt;p&gt;正好阿里云ECS 文档上有教程，就&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;help.aliyun.com&#x2F;zh&#x2F;simple-application-server&#x2F;use-cases&#x2F;use-vnc-to-build-guis-on-ubuntu-18-04-and-20-04&quot;&gt;参考着安装&lt;&#x2F;a&gt;。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhang-hao-zhun-bei&quot;&gt;账号准备&lt;&#x2F;h3&gt;
+&lt;p&gt;因为每个 vnc 关联一个登录账号，需要先准备一个登录账号：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; adduser myuser
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; usermod&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -aG&lt;&#x2F;span&gt;&lt;span&gt; sudo myuser
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;getent&lt;&#x2F;span&gt;&lt;span&gt; group sudo myuser
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里创建了一个 myuser，并且添加到 sudo 组中。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;tu-xing-huan-jing-an-zhuang&quot;&gt;图形环境安装&lt;&#x2F;h3&gt;
+&lt;p&gt;因为是远程用，这里安装精简的 xfce 桌面。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; apt install xfce4 xfce4-goodies
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;vnc-server-an-zhuang-pei-zhi&quot;&gt;VNC server 安装配置&lt;&#x2F;h3&gt;
+&lt;p&gt;首先安装 vnc 软件包：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; apt install tigervnc-standalone-server tigervnc-common
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;然后设置登录密码：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;vncpasswd
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里会要确认密码选项，选择 n 就可以。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;pei-zhi-xstartup&quot;&gt;配置 xstartup&lt;&#x2F;h3&gt;
+&lt;p&gt;这里麻烦点，官方的教程可能太老了不适用，查了一些资料后终于解决了启动问题。
+添加 &lt;code&gt;$HOME&#x2F;.vnc&#x2F;xstartup&lt;&#x2F;code&gt;：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#!&#x2F;bin&#x2F;sh
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;XKL_XMODMAP_DISABLE&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;XDG_RUNTIME_DIR&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;run&#x2F;user&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;id -u&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;unset&lt;&#x2F;span&gt;&lt;span&gt; SESSION_MANAGER
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;unset&lt;&#x2F;span&gt;&lt;span&gt; DBUS_SESSION_BUS_ADDRESS
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;[ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;-x&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;etc&#x2F;vnc&#x2F;xstartup &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;] &lt;&#x2F;span&gt;&lt;span&gt;&amp;amp;&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;exec&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;etc&#x2F;vnc&#x2F;xstartup
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;[ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;-r &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HOME&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;.Xresources &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;] &lt;&#x2F;span&gt;&lt;span&gt;&amp;amp;&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;xrdb &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HOME&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;.Xresources
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;startxfce4
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;qi-dong-vnc-server&quot;&gt;启动 VNC server&lt;&#x2F;h3&gt;
+&lt;p&gt;直接执行以下命令即可启动一个vncserver 实例，如果要长期使用，建议加到 &lt;code&gt;.profile&lt;&#x2F;code&gt; 中间中：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;BROWSER&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;firefox
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;vncserver&lt;&#x2F;span&gt;&lt;span&gt; :1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -geometry&lt;&#x2F;span&gt;&lt;span&gt; 1280x720&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -depth&lt;&#x2F;span&gt;&lt;span&gt; 24&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -securitytypes&lt;&#x2F;span&gt;&lt;span&gt; VncAuth,TLSVnc
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里设置分辨率 1280x720，可以根据自己的需要调整，不过不建议调太高，尤其是公网访问的情况下，太高的分辨率卡顿很严重，我自己用 1080 试过，几乎卡成PPT 了。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;an-zhuang-zhong-wen-zi-ti&quot;&gt;安装中文字体&lt;&#x2F;h3&gt;
+&lt;p&gt;以上配置好后通过 VNC client 就可以连接上去了，默认启动的是 5900 + server_id 端口，比如第一个 server 就是 5901，通过vnc &lt;code&gt;ip:5901&lt;&#x2F;code&gt; 就可以远程连接使用。&lt;&#x2F;p&gt;
+&lt;p&gt;不过连上去如果打开中文网站会发现显示乱码，这个是因为没有中文字体支持，所以我们安装下中文字体：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; apt install fonts-wqy-zenhei fonts-wqy-microhei xfonts-wqy
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这样差不多就能正常访问了，记得安装firefox 浏览器，当然也可以安装其它的，不过需要记得修改 &lt;code&gt;export BROWSER=firefox&lt;&#x2F;code&gt; 配置，&lt;code&gt;xfce4&lt;&#x2F;code&gt; 默认通过该环境变量来启动浏览器。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;docker-vnc-linux&quot;&gt;Docker VNC Linux&lt;&#x2F;h2&gt;
+&lt;p&gt;上面的配置基本满足了远程Linux 访问需求，稍微有点麻烦的是每个用户登录上去都需要配置下vnc server 相关的配置。就想着都是通过vnc 访问，是否可以直接用docker 容器来启动linux 桌面呢，只要配置好一个docker 镜像，后续每个用户只要启动自己的容器即可。按照这个思路在Google 上搜了下还真现成的镜像 &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;edgelevel&#x2F;alpine-xfce-vnc&quot;&gt;alpine-xfce-vnc&lt;&#x2F;a&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;这里贴下使用方式：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# pull latest image
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;docker&lt;&#x2F;span&gt;&lt;span&gt; run&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --rm &lt;&#x2F;span&gt;&lt;span&gt;\
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;  -p&lt;&#x2F;span&gt;&lt;span&gt; 5900:5900&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -p&lt;&#x2F;span&gt;&lt;span&gt; 6080:6080 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;  --name&lt;&#x2F;span&gt;&lt;span&gt; alpine-xfce-vnc \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;  --hostname&lt;&#x2F;span&gt;&lt;span&gt; alpine \
+&lt;&#x2F;span&gt;&lt;span&gt;  edgelevel&#x2F;alpine-xfce-vnc
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;可以看到使用非常的方便，一个docker 命令搞定，而且启动非常的快。支持 VNC 和 noVNC 两种方式访问。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;vnc-linux&#x2F;tigervnc.webp&quot; alt=&quot;tigervnc&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;这个docker 镜像是基于alpine 制作的，对于中文乱码，打开终端安装中文字体即可解决：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;apk&lt;&#x2F;span&gt;&lt;span&gt; add font-wqy-zenhei
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;shi-yong-docker-firefox&quot;&gt;使用 docker-firefox&lt;&#x2F;h2&gt;
+&lt;p&gt;上面docker 的方案已经很方便了，但是个人稍微有点强迫症，感觉linux 中除了浏览器其它的软件都不需要，尤其是状态栏，壁纸相关，不仅占空间而且会额外影响vnc 的传输效率。基本想法是也不需要安装 &lt;code&gt;xfce4&lt;&#x2F;code&gt; 桌面了，直接安装一个浏览器就可以。然后找到了 &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;jlesage&#x2F;docker-firefox&quot;&gt;docker-firefox&lt;&#x2F;a&gt; 项目。&lt;&#x2F;p&gt;
+&lt;p&gt;该项目其实跟上面的 docker vnc linux 方案差别不大，只是没有安装完整的桌面，使用了精简的 &lt;code&gt;icewm&lt;&#x2F;code&gt;，整个容器启动后就是一个浏览器的桌面，非常的简洁。&lt;&#x2F;p&gt;
+&lt;p&gt;启动命令：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;docker&lt;&#x2F;span&gt;&lt;span&gt; run&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -d &lt;&#x2F;span&gt;&lt;span&gt;\
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    --name&lt;&#x2F;span&gt;&lt;span&gt;=firefox \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -p&lt;&#x2F;span&gt;&lt;span&gt; 5800:5800 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -v&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;docker&#x2F;appdata&#x2F;firefox:&#x2F;config:rw \
+&lt;&#x2F;span&gt;&lt;span&gt;    jlesage&#x2F;firefox
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里面还有挺多参数可以配置，包括语言、分辨率还有字体等，如果想开箱即用可以用如下命令启动：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;docker&lt;&#x2F;span&gt;&lt;span&gt; run&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -d &lt;&#x2F;span&gt;&lt;span&gt;\
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    --name&lt;&#x2F;span&gt;&lt;span&gt;=firefox \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -e&lt;&#x2F;span&gt;&lt;span&gt; DISPLAY_WIDTH=1280 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -e&lt;&#x2F;span&gt;&lt;span&gt; DISPLAY_HEIGHT=900 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -e&lt;&#x2F;span&gt;&lt;span&gt; LANG=zh_CN.UTF-8 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -e&lt;&#x2F;span&gt;&lt;span&gt; TZ=Asia&#x2F;Shanghai \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -e&lt;&#x2F;span&gt;&lt;span&gt; ENABLE_CJK_FONT=1 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -p&lt;&#x2F;span&gt;&lt;span&gt; 5800:5800 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -p&lt;&#x2F;span&gt;&lt;span&gt; 5900:5900 \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;    -v &lt;&#x2F;span&gt;&lt;span&gt;`&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;pwd&lt;&#x2F;span&gt;&lt;span&gt;`&#x2F;firefox:&#x2F;config:rw \
+&lt;&#x2F;span&gt;&lt;span&gt;    jlesage&#x2F;firefox
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;vnc-linux&#x2F;docker-firefox.webp&quot; alt=&quot;docker-firefox&quot; &#x2F;&gt;
+&lt;code&gt;ip:5800&lt;&#x2F;code&gt; 通过浏览器 &lt;code&gt;noVNC&lt;&#x2F;code&gt; 访问，&lt;code&gt;ip:5900&lt;&#x2F;code&gt; 通过vnc client 访问，推荐通过client 的方式访问，浏览器快捷键操作容器不小心就退出了。&lt;&#x2F;p&gt;
+&lt;p&gt;这里有个问题没有解决，系统剪切板共享中文的时候是乱码，&lt;code&gt;GitHub&lt;&#x2F;code&gt; 上搜了下也没看到解决方案，后续再研究看看。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

@@ -1,0 +1,167 @@
+<!doctype html><html lang=zh><head><meta charset=UTF-8><meta content="IE=edge" http-equiv=X-UA-Compatible><meta content="text/html; charset=UTF-8" http-equiv=content-type><meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport><meta content="index, follow" name=robots><title>Gorilla：连接大量 API 的大型语言模型</title><meta content="Gorilla：连接大量 API 的大型语言模型" name=title><meta content=Dirigo name=author><meta content=website property=og:type><meta content=https://linq.github.io/posts/gorilla/ property=og:url><meta property=og:site_name><meta content="Gorilla：连接大量 API 的大型语言模型" property=og:title><meta content=https://linq.github.io/favicon.ico property=og:image><meta content=summary_large_image property=twitter:card><meta content=https://linq.github.io/posts/gorilla/ property=twitter:url><meta content="Gorilla：连接大量 API 的大型语言模型" property=twitter:title><meta content=https://linq.github.io/favicon.ico property=twitter:image><link href=https://linq.github.io/posts/gorilla/ rel=canonical><link rel="shortcut icon" href=https://linq.github.io/favicon.ico type=image/x-icon><link href=https://linq.github.io/atom.xml rel=alternate title=RSS type=application/atom+xml><link href=https://linq.github.io/css/style.css rel=stylesheet><link href=https://linq.github.io/css/custom.css rel=stylesheet><script defer src=https://linq.github.io/js/script.js></script><body><div class=wrapper><header><nav class=navBar><a href=/> /首页/ </a><a href=/archive> /归档/ </a><a href=/tags> /标签/ </a><a href=/book> /图书/ </a><div class=themeSwitch><button class="themeButton light" onclick="setTheme('light')" title="Light mode"><svg class="icons icons__background"><use href=https://linq.github.io/icons.svg#lightMode></use></svg></button><button class="themeButton dark" onclick="setTheme('dark')" title="Dark mode"><svg class="icons icons__background"><use href=https://linq.github.io/icons.svg#darkMode></use></svg></button></div></nav></header><main><h1>Gorilla：连接大量 API 的大型语言模型</h1><blockquote><p>这篇文章介绍了 Berkeley 函数调用排行榜(BFCL),这是首个对大语言模型(LLM)函数调用能力的全面评估基准。文章详细阐述了:<ul><li>评估数据集的构成(包含 2000 个测试用例,涵盖 Python、Java、JavaScript、REST API 等多种语言)<li>评估方法(包括 AST 分析和可执行函数验证)<li>不同类型的函数调用测试(简单、多重、并行等场景)<li>各个模型的成本和延迟数据<li>常见的函数调用错误模式</ul><p>研究发现,在简单函数调用场景下,经过微调的开源模型可以达到与专有模型相当的效果。文章还介绍了他们开发的开源模型 Gorilla Open Functions v2。<p>原文链接：https://gorilla.cs.berkeley.edu/blogs/8_berkeley_function_calling_leaderboard.html</blockquote><p>除了聊天之外，将大型语言模型（LLM）集成到许多应用程序和软件中（例如，Langchain、Llama Index、AutoGPT、Voyager）也变得越来越普遍。像 GPT、Gemini、Llama、Mistral 等模型，已通过函数调用（也称为工具调用）能力展示了这方面的巨大潜力。<p>我们提出了伯克利函数调用排行榜（BFCL），这是对 LLM 调用函数和工具的能力进行的首次全面评估。我们从实践经验中构建了这个数据集，使其能代表大多数用户的函数调用场景，例如在智能体中或作为企业工作流的一部分等。我们考虑了各种形式的函数调用，包括并行调用(一个函数输入，多个函数输出)和多重调用 (多个函数输入，一个函数输出)，涵盖了 Java、JavaScript 等多种编程语言。此外，我们还会执行这些函数来测试模型，并评估模型在没有合适函数可用时是否能够正确地避免选择函数。另外，排行榜现在还包含了所有不同模型的成本和延迟数据!<p>2024 年 8 月 19 日，我们发布了 BFCL V2 数据集，其特点是包含企业贡献的数据，解决了偏见和数据污染等问题，并专注于动态的真实场景。查看 <a href=https://gorilla.cs.berkeley.edu/blogs/12_bfcl_v2_live.html rel=noopener target=_blank>BFCL V2 · Live 博客文章</a>了解更多详情。<p>2024 年 9 月 19 日，我们发布了 BFCL V3 数据集，其特点是包含多轮和多步骤函数调用评估。查看 <a href=https://gorilla.cs.berkeley.edu/blogs/13_bfcl_v3_multi_turn.html rel=noopener target=_blank>BFCL V3 博客文章</a>了解更多详情!<p>快速链接:<ul><li>在线排行榜:<a href=https://gorilla.cs.berkeley.edu/leaderboard.html rel=noopener target=_blank>网站</a><li>BFCL 评估数据集:<a href=https://huggingface.co/datasets/gorilla-llm/Berkeley-Function-Calling-Leaderboard rel=noopener target=_blank>HuggingFace 数据集 🤗</a><li>BFCL V2 Live: <a href=https://gorilla.cs.berkeley.edu/blogs/12_bfcl_v2_live.html rel=noopener target=_blank>博客文章</a><li>Gradio 演示:<a href=https://huggingface.co/spaces/gorilla-llm/berkeley-function-calling-leaderboard rel=noopener target=_blank>HuggingFace Space 🤗</a><li>可复现性 :<a href=https://github.com/ShishirPatil/gorilla/tree/main/berkeley-function-call-leaderboard rel=noopener target=_blank>Github 代码</a><li>OpenFunctions-v2 (6.91B) 在 HuggingFace 🤗:<a href=https://huggingface.co/gorilla-llm/gorilla-openfunctions-v2 rel=noopener target=_blank>gorilla-llm/gorilla-openfunctions-v2</a></ul><h3 id=berkeley-han-shu-diao-yong-pai-xing-bang-trophy>Berkeley 函数调用排行榜 🏆</h3><p><a href=https://gorilla.cs.berkeley.edu/leaderboard.html rel=noopener target=_blank>Berkeley 函数调用排行榜</a> (BFCL) 旨在对不同 LLM 的函数调用能力进行全面研究。它包含 2000 个问题-函数-答案对，涵盖多种语言 (Python、Java、JavaScript、REST API)，多样化的应用领域和复杂用例 (多函数调用，LLM 需要从多个提供的函数中选择一个或多个函数；以及并行函数调用，LLM 需要同时进行多个函数调用)。我们还研究了函数相关性检测，以确定当提供的函数不适合回答用户问题时模型会如何反应(在这种情况下会提供“错误信息“)。更具体地说，<strong>BFCL 包含 100 个 Java、50 个 JavaScript、70 个 REST API、100 个 SQL 和 1，680 个 Python 测试，涵盖了简单、并行、多重、可执行函数调用场景以及函数相关性检测</strong>。<p>如下图所示的排行榜中，我们可以看到 OpenAI 的最新 GPT-4 版本领先评估，紧随其后的是开源模型 (OpenFunctions-v2)、Mistral AI 的 Mistral-medium 模型和 Anthropic 的 Claude-2.1。这篇博文包含了更多关于数据集、评估方法、常见失败模式等信息!<p><img alt="Berkeley 函数调用排行榜 (BFCL)" src=https://oss-ata.alibaba.com/article/2025/01/050a87a4-df1a-4712-9b82-cadfcb2e4131.png> <em>LLM 在 <a href=https://gorilla.cs.berkeley.edu/leaderboard.html rel=noopener target=_blank>Berkeley 函数调用排行榜</a> (BFCL) 上的表现</em><p>为了改进我们对结果的理解和可视化，我们引入了一个交互式的轮辐图工具，允许用户比较各种模型。这种比较分为九个不同的类别：函数相关性检测、AST(抽象语法树)分析，以及在简单、多重和并行多重函数场景下的执行函数调用验证。通过这种方法，可以清楚地看到测试揭示了模型的不理想表现。具体来说，在简单函数调用方面，专有和开源模型表现相当。然而，在处理多重和并行函数调用时，GPT 系列模型表现优于开源对手。<p><img alt="Berkeley 函数调用排行榜 (BFCL) 轮辐图" src=https://oss-ata.alibaba.com/article/2025/01/e134c84f-4d69-435b-9bf7-414b7b10c9ef.gif> <em>使用 <a href=https://gorilla.cs.berkeley.edu/leaderboard.html rel=noopener target=_blank>Berkeley 函数调用排行榜</a> (BFCL) 轮辐图进行的详细分析</em><h3 id=shu-ju-ji-gou-cheng>数据集构成</h3><p>Gorilla OpenFunctions 评估数据集从之前的 <a href=https://gorilla.cs.berkeley.edu/blogs/4_open_functions.html rel=noopener target=_blank><code>OpenFunctions-v0</code> 的 100 个数据点</a>增长到了 2，000 个数据点！除了质量改进外，扩展后的数据集在以下方面展示了多样性:<ul><li>函数文档的领域<li>函数文档和函数调用对的数量<li>不同编程语言的数据类型<li>真实世界示例的可执行性</ul><p>我们的评估 JSON 函数是从不同网站来源抓取和生成的。我们有意包含了与 <code>数学-代数</code>、<code>体育-足球</code>、<code>金融-抵押</code> 等相关的函数领域。我们在通用评估中包含了 40 个函数子领域。这使我们能够理解模型在计算、云计算等数据丰富领域以及体育、法律等小众领域的表现。<p><img alt="Gorilla 输入和输出" src=https://oss-ata.alibaba.com/article/2025/01/f63711f2-7099-4852-887d-e28f6181fbe0.png><em><a href=https://gorilla.cs.berkeley.edu/leaderboard.html rel=noopener target=_blank>伯克利函数调用排行榜</a> (BFCL) 数据组成</em><h3 id=ping-gu-lei-bie-bar-chart>评估类别 📊</h3><p>我们将大部分评估分为两个类别:<ul><li><strong>Python</strong>: 简单函数、多重函数、并行函数、并行多重函数<li><strong>非 Python</strong>: 聊天能力、函数相关性检测、REST API、SQL、Java、Javascript</ul><h5 id=python-ping-gu>Python 评估</h5><p>**简单函数:**单函数评估包含最简单但最常见的格式，用户提供单个 JSON 函数文档，且只会调用一个函数。<p>**多重函数:**多重函数类别包含一个用户问题，该问题只从 2 到 4 个 JSON 函数文档中调用一个函数。模型需要能够根据用户提供的上下文选择最佳函数来调用。<p>**并行函数:**并行函数定义为通过一个用户查询并行调用多个函数。模型需要理解需要进行多少次函数调用，问题可以是单句或多句。<p>**并行多重函数:**并行多重函数是并行函数和多重函数的组合。换句话说，模型会收到多个函数文档，每个相应的函数调用将被调用零次或多次。<p>每个类别都有 AST 和相应的可执行评估。在可执行评估数据中，我们手动编写了 Python 函数，这些函数从免费的 REST API 端点 (例如获取天气) 和直接计算的函数 (例如线性回归) 中获取灵感。可执行类别旨在了解函数调用生成是否能在现实世界的应用程序中稳定使用函数调用。<h5 id=fei-python-ping-gu>非 Python 评估</h5><p>虽然前面的类别构成了我们评估的主要部分，但我们还包括了其他特定类别，即聊天能力、函数相关性检测、REST API、SQL、Java 和 JavaScript，以评估模型在不同场景下的表现、对多种编程语言的支持，以及对不相关问题和函数文档的适应能力。<p>**聊天能力:**在聊天能力中，我们设计了不传入函数的场景，用户提出一般性问题 ⸺ 这类似于将模型用作通用聊天机器人。我们评估模型是否能够输出聊天消息并认识到不需要调用任何函数。注意与 “相关性” 的区别，在 “相关性” 中，模型还需要评估任何函数输入是否相关。我们将此类别用于内部模型评估，并从实时排行榜中排除统计数据。我们目前正在努力改进聊天能力的评估，确保聊天与用户请求相关且连贯，并欢迎社区提供建议和反馈。<p>**函数相关性检测:**在函数相关性检测中，我们设计了场景，其中没有任何提供的函数是相关的且应该被调用的。我们期望模型的输出是没有函数调用。这种场景可以洞察模型是否会在缺乏函数信息或用户指令的情况下，对其函数和参数产生幻觉来生成函数代码。<p><strong>REST API:</strong> 现实世界中的大多数 API 调用都是 REST API 调用。Python 主要通过 Python requests 库中包含的 <code>requests.get()</code>、<code>requests.post()</code>、<code>requests.delete()</code> 等进行 REST API 调用。GET 请求是现实世界中最常用的。因此，我们包括了真实世界的 GET 请求，以测试模型通过复杂函数文档生成可执行 REST API 调用的能力，使用 <code>requests.get()</code> 以及 API 的硬编码 URL 和函数及其参数的描述。<p>我们的评估包括两种变体。第一种需要在 URL 中传递参数，称为路径参数，例如 <code>GET /api/v3/PublicHolidays/{Year}/{CountryCode}</code> 中的 <code>{Year}</code> 和 <code>{CountryCode}</code>。第二种需要模型将参数作为键值对放入 <code>requests.get(.)</code> 的 <code>params</code> 和/或 <code>headers</code> 中。例如，函数调用中的 <code>params={'lang': 'fr'}</code>。模型并不会被告知将要进行哪种类型的 REST API 调用，而是需要自行决定如何调用。<p>对于 REST API，我们使用可执行评估来检查可执行输出的有效执行、响应类型和响应 JSON 键的一致性。在 AST 方面，我们选择不对 REST 执行 AST 评估，主要是因为复杂定义的 API 可能有大量可能的答案，枚举所有可能的答案是很耗费资源的。<p><strong>SQL:</strong> SQL 评估数据包括我们自定义的 <code>sql.execute</code> 函数，其中包含 sql_keyword、table_name、columns 和 conditions。这四个参数提供了构造简单 SQL 查询所需的信息，如 <code>SELECT column_A from table_B where column_C == D</code>。通过这种方式，我们想看看是否可以通过函数调用可靠地构造和使用 SQL 查询，而不是训练特定的 SQL 模型。在我们的评估数据集中，我们限制了场景并支持简单的关键字，包括 <code>SELECT</code>、<code>INSERT INTO</code>、<code>UPDATE</code>、<code>DELETE</code> 和 <code>CREATE</code>。我们包含了 100 个用于 SQL AST 评估的示例。注意，SQL AST 评估不会显示在我们的排行榜计算中。我们使用 SQL 评估来测试函数调用对于未包含在 Gorilla OpenFunctions-v2 训练集中的编程语言的泛化能力。由于构造 SQL 函数调用实现相同结果的方法有多种，我们选择从 BFCL 的 AST 评估中排除 SQL 性能。我们目前正在努力改进 SQL 评估，并欢迎社区提供建议和反馈。因此，当前排行榜中已省略 SQL，为后续迭代中更全面的评估铺平道路。<p><strong>Java + Javascript:</strong> 尽管函数调用格式在大多数编程语言中都是相同的，但每种编程语言都有特定的类型。例如，Java 有 <code>HashMap</code> 类型。这个测试类别的目标是了解函数调用模型不仅可以扩展到 Python 类型，还可以扩展到所有特定语言的类型。我们包含了 100 个用于 Java AST 评估的示例和 70 个用于 Javascript AST 评估的示例。<p>上述类别提供了不同模型在流行的 API 调用场景中的性能洞察，为函数调用模型的潜力提供了有价值的视角。<h5 id=pai-xing-bang-ping-gu-lei-bie>排行榜评估类别</h5><p>我们对现有类别进行了层次分类，在 Berkeley 函数调用排行榜 BFCL 中展示了九个类别，这些类别按评估方法(AST 或执行)和函数类型(简单、并行、多重、并行多重函数)进行分组。这里，我们展示了一个表格，组织了每个排行榜类别的评估数据点计数，这些类别由博客中列出的更细粒度的类别组成。具体来说，我们将 REST 可执行评估归类为“简单函数(通过执行 API 评估)“，因为我们考虑了调用一个 REST API 的情况。对于 Java + Javascript 评估，我们将其归类为“简单函数(抽象语法树 (AST) 评估)”，因为我们当前版本的评估集没有包含多种编程语言的多重、并行和并行多重情况。<p>BFCL 中显示的九个类别的最终计数以及更细粒度类型的组成如下表所示：<table><thead><tr><th>Abstract Syntax Tree (AST) Evaluation 🌳<th><th><th><th>Evaluation by Executing APIs ⚙️<th><th><th><th>Relevance Detection<tbody><tr><td>Simple Function<td>Multiple Functions<td>Parallel Functions<td>Parallel Multiple<td>Simple Function<td>Multiple Functions<td>Parallel Functions<td>Parallel Multiple<td><tr><td>Py: 400Java: 100JS: 50<td>Py: 200<td>Py: 200<td>Py: 200<td>Py: 100REST: 70<td>Py: 50<td>Py: 50<td>Py: 40<td>Py: 240</table><h3 id=ping-gu-zhi-biao-chart-with-upwards-trend>评估指标 📈</h3><p>我们使用两种流行的方法来评估模型生成答案的准确性 :AST 评估和可执行评估。理想情况下应该使用执行评估，但在评估答案时，并非所有结果都容易执行 (例如 Java 函数)。因此我们使用 AST 作为执行评估的补充。<ul><li>抽象语法树 (AST) 评估<li>可执行函数评估</ul><h4 id=chou-xiang-yu-fa-shu-ast-ping-gu-deciduous-tree>抽象语法树 (AST) 评估 🌳</h4><p>对于<strong>简单函数评估</strong>，评估过程主要关注比较_单个模型输出函数_与其_函数文档_和_可能的答案_。下面的流程图展示了逐步评估过程。<p><img alt=模型评估流程图 src=https://oss-ata.alibaba.com/article/2025/01/40db2ffc-94ab-4883-906b-1651fae5c132.jpeg> <em>评估函数调用。使用函数描述和可能的答案来评估模型的输出函数。</em><h5 id=tong-guo-ast-jie-xi-han-shu>通过 AST 解析函数</h5><p>评估过程从使用 AST 树解析函数调用开始。<p><strong>示例</strong>:<pre class=language-plaintext data-lang=plaintext style=background:#2b303b;color:#c0c5ce><code class=language-plaintext data-lang=plaintext><span>calculate_triangle_area(base=10， height=5)
+</span></code></pre><p><strong>解析</strong>:<pre class=language-plaintext data-lang=plaintext style=background:#2b303b;color:#c0c5ce><code class=language-plaintext data-lang=plaintext><span>Module(body=[
+</span><span>        Expr(value=List(elts=[
+</span><span>            Call(
+</span><span>                func=Name(id='calculate_triangle_area'， ctx=Load())， 
+</span><span>                args=[]， 
+</span><span>                keywords=[
+</span><span>                    keyword(arg='base'， value=Constant(value=10))， 
+</span><span>                    keyword(arg='height'， value=Constant(value=5))
+</span><span>                ]
+</span><span>            )
+</span><span>        ]， ctx=Load()))
+</span><span>    ]， type_ignores=[])
+</span></code></pre><h5 id=han-shu-pi-pei>函数匹配</h5><p>该过程首先提取函数名称，并验证其与可能答案中的函数名称是否一致。<ul><li>在此，请注意函数名称可能包含<code>.</code>。 鉴于某些模型（例如 OpenAI 系列）可能不支持输入中的点<code>.</code>，我们在推断模型以生成函数输出时，将函数名称中的点替换为下划线<code>_</code>。 此替换在结果评估阶段重复进行。</ul><h5 id=bi-xu-can-shu-pi-pei>必需参数匹配</h5><p>然后，它从 AST 中提取参数，并检查每个参数是否能在可能的答案中找到并精确匹配。<ul><li>该评估过程确保所有<strong>必需参数</strong>，即函数文档中通过 “required” 属性标识的参数，都存在于模型输出中。<li>它还确保只使用<strong>函数文档中存在的参数</strong>，标记出模型产生的幻觉输出。</ul><h5 id=can-shu-lei-xing-he-zhi-pi-pei>参数类型和值匹配</h5><p>评估过程对<strong>类型</strong>要求严格。以下是每种数据类型可接受的答案:<ul><li><p>对于 <code>bool</code> 类型:</p> <ul><li>程序检查布尔值的直接匹配，不允许使用布尔值的字符串版本。</ul><li><p>对于 <code>integer</code>、<code>float</code> 类型:</p> <ul><li><strong>仅对 Python 测试</strong>，我们允许对期望 <code>float</code> 值的 Python 参数使用 <code>int</code> 值，以适应 Python 从 <code>int</code> 到 <code>float</code> 的自动转换特性。<li>对于非 Python 语言 (Java 和 JavaScript)，如果函数文档指定参数为 <code>float</code> 类型，那么模型输出中也必须是 <code>float</code>(如 <code>5.0</code>);使用 <code>int</code>(如 <code>5</code>)将是不正确的。<li>在任何语言中都不允许为 <code>int</code> 参数提供 <code>float</code> 值。</ul><li><p>对于 <code>List</code>、<code>Tuple</code> 类型:</p> <ul><li><strong>顺序很重要</strong>且元素<strong>必须完全匹配</strong>。例如，<code>[1，2，3]</code> 不等于 <code>[2，3，1]</code>。因此对于列表顺序无关紧要的问题，我们使用可能答案的排列组合来适应这种情况。<li>注意<strong>类型匹配</strong>对嵌套数据结构(<code>List</code> 或 <code>Tuple</code>)进行_递归_检查，外部类型和内部元素类型都必须符合指定要求。</ul><li><p>对于 <code>String</code> 类型:</p> <ul><li>评估过程_不区分大小写_。<li>所有字符串在检查前都会被标准化。这适用于模型输出和可能的答案。 <ul><li>移除所有空白字符。<li>移除一部分标点符号 <code>，./-_*^</code> 以使评估更稳健和准确。<li>可能的日期格式 <code>["20th June"， "2023-06-20"， "06/20/2023"， "Jun.20， 2023"]</code><li>可能的地点格式 <code>["New York City"， "NYC"]</code><li>其他可能格式 <code>["Manchester United"， "Man United"， "Man U"， "MUFC"]</code></ul></ul><li><p>对于 <code>Dict</code> 类型:</p> <ul><li>评估重点关注_键的存在_以及与可能答案相关联的_值的准确性_。<li>由于字典本质上是_无序的_，因此不考虑字典内的顺序。</ul><li><p>对于<code>字典列表</code>:</p> <ul><li>虽然考虑字典的顺序 (因为它是<code>List</code>)，但不考虑每个字典内键值对的顺序。</ul><li><p>处理函数调用中的<strong>可选参数</strong>:</p> <ul><li>对于真正<strong>可选</strong>的参数(换句话说，函数文档没有将该参数列为必需且可能答案包含空字符串 <code>""</code>)，模型可以选择使用该参数的_默认值_，或者不提供值。两种方式都被认为是正确的。<li>对于函数文档中未列为_必需_且可能答案中不包含空字符串 <code>""</code> 的参数，则该参数不是真正_可选_的。提示词必须暗示我们应该使用与默认值不同的值。在这种情况下，模型需要明确提供正确的值；使用默认值或不提供值将被标记为错误。</ul><li><p>当参数值是提示中提到的<strong>变量</strong>时，程序会特殊处理。例如，如果参数 <code>param1</code> 的类型是 <code>integer</code>，用户可以提供 <code>param1=value1</code>(其中 <code>value1</code> 是 <code>integer</code> 类型的具体值)，或 <code>param1=variable1</code>(其中 <code>variable1</code> 是保存 <code>integer</code> 值的变量)。因此评估在检查类型时会考虑这两种情况。</p><li><p>对于 <strong>Java</strong> 和 <strong>JavaScript</strong> 测试类别，所有参数值 (在输入中) 都是字符串格式。评估程序将调用 <code>java_type_converter</code> 或 <code>js_type_converter</code> 辅助方法，将 <strong>Java</strong>/<strong>JS</strong> 类型的字符串版本转换为相应的 Python 格式，因为我们使用 Python 数据类型进行检查。例如，<strong>Java</strong> 中的 <code>HashMap</code> 将被转换为 Python 中的字典。在此过程中，转换器还将对这些参数执行类型检查；例如，如果参数应该是 <strong>Java</strong> 中的 long 类型，转换器将确保字符串输入的末尾有 <code>"L"</code>(否则它将不是有效的 Java long 类型)。</p></ul><p><strong>以下是一些可能答案的示例:</strong><pre class=language-plaintext data-lang=plaintext style=background:#2b303b;color:#c0c5ce><code class=language-plaintext data-lang=plaintext><span>{"calculate_triangle_area": {"base": [10]， "height": [5]， "unit": ["units"， "unit"]}}
+</span></code></pre><pre class=language-plaintext data-lang=plaintext style=background:#2b303b;color:#c0c5ce><code class=language-plaintext data-lang=plaintext><span>{"predict_house_price": {"bedrooms": [3]， "bathrooms": [2]， "area": [1800]， "location": ["San Francisco"， "San Francisco， CA"]}}
+</span></code></pre><h5 id=duo-zhong-bing-xing-bing-xing-duo-zhong-han-shu-de-ast-ping-gu>多重/并行/并行多重函数的 AST 评估</h5><p><strong>多重、并行或并行多重函数的 AST 评估过程</strong>扩展了简单函数评估的思路，以支持多个模型输出和可能的答案。<ul><li>评估过程首先将每个可能的答案与其函数文档关联。然后遍历模型输出，对每个函数调用<strong>简单函数评估</strong>(该评估接收一个_模型输出_、<em>一个可能的答案_和一个_函数文档</em>)。 <ul><li>不要求模型输出相对于可能答案的顺序。一个模型输出可以与任何可能的答案匹配。</ul><li>评估采用_全有或全无_的方法。如果任何给定的可能答案无法在所有模型输出中找到匹配，则导致_评估失败_。</ul><h4 id=ke-zhi-xing-han-shu-ping-gu-gear>可执行函数评估 ⚙️</h4><p>在<code>可执行</code>测试类别中，我们执行生成的 API 调用以检查响应的正确性。由于<code>非 REST</code>和 <code>REST</code> 测试的特点不同，评估过程也有所不同:<h5 id=ke-zhi-xing-han-shu-fei-rest-ping-gu>可执行函数(<code>非 REST</code>)评估:</h5><ul><li>执行涉及运行指定的函数并检查其输出。<li>评估标准(根据可执行函数示例，必须满足以下任一条件): <ul><li><strong>精确匹配</strong>: 输出必须与预期结果完全匹配。<li><strong>实时匹配</strong>: 这是一种较为宽松的精确匹配形式，仅适用于数值执行结果，其中执行结果必须在预期结果的某个百分比阈值(20%)内，以适应 API 响应的实时更新。<li><strong>结构匹配</strong>: 输出必须匹配预期的数据类型。例如，如果预期类型是 <code>list</code>，则<code>[1， 2， 3]</code>和<code>[1.5， 2.4， 6]</code>都可以接受。此外，以下类型有一些特殊要求: <ul><li>对于 <code>List</code>，长度必须与预期长度匹配。不检查每个元素的类型。<li>对于 <code>Dict</code>，键必须与预期输出中存在的键匹配。这意味着不能有多余的键也不能缺少键。不检查每个值的类型。</ul></ul></ul><h5 id=ke-zhi-xing-han-shu-rest-ping-gu>可执行函数 (<code>REST</code>) 评估:</h5><ul><li>这些测试涉及执行 API 调用并评估: <ul><li><strong>有效执行</strong>: 评估 API 调用执行的成功性。<li><strong>响应类型准确性</strong>: 确保 API 响应匹配预期结构 (例如，<code>JSON 对象列表</code>)。<li><strong>JSON 键一致性</strong>: 检查生成的响应和预期响应之间的 <em>JSON 键集</em> 是否一致。</ul><li>初始收集并以 JSON 格式存储了 <code>REST</code> 响应的基准数据，用于比较。<li>考虑到 <code>REST</code> 响应的_可变性质_(例如，变化的天气数据)，可执行评估侧重于_结构不变性_和_实时执行成功_，而不是静态值。 <ul><li>特别是，可执行评估验证响应类型是否与基准数据匹配 (例如，期望得到 JSON 对象列表)，并检查元素数量和 JSON 键集的一致性。</ul></ul><p><strong>声明</strong>: 考虑到 <code>REST</code>API 响应结构可能会被其开发者更新，评估方法包含了一个可选的 API 健康检查，以确保在运行任何可执行类别测试之前，评估过程中涉及的所有 API 都按预期工作。<code>REST</code> 类别的基准数据也会定期审查和更新，以确保评估保持准确和相关性。<h5 id=duo-zhong-bing-xing-bing-xing-duo-zhong-ke-zhi-xing-han-shu-ping-gu>多重/并行/并行多重可执行函数评估</h5><p><strong>多重、并行或并行多重可执行函数评估过程</strong>扩展了简单可执行函数评估的思路。<ul><li>评估过程首先执行每个模型生成的函数调用。然后，它将实时执行的输出与基准执行输出进行比较，并对每对输出调用简单可执行函数评估程序。 <ul><li>不要求模型执行输出相对于基准执行输出的顺序。</ul><li>评估采用_全有或全无_的方法。如果任何给定的基准执行输出及其相应的评估标准无法在所有模型执行输出中找到匹配，则导致_评估失败_。</ul><h3 id=cheng-ben-he-yan-chi>成本和延迟</h3><p>在我们最近的更新中，我们也特别关注了<strong>成本</strong>和<strong>延迟</strong>。<ul><li><p>对于来自 OpenAI、Mistral、Google、Anthropic 等服务提供商的模型:</p> <ul><li><strong>延迟</strong>: 我们通过计时每个端点请求来测量延迟，不包括函数文档预处理时间。<li><strong>成本</strong>: 我们遵循公式计算每 1000 次函数调用的成本。<img alt=img src=https://oss-ata.alibaba.com/article/2025/01/4d988535-0d9b-404c-bb6a-52155284ad88.jpg></ul><li><p>对于我们使用本地托管评估的模型(包括 Deepseek、Gemma 等):</p> <ul><li><strong>延迟</strong>: 我们使用 8 个 V100 GPU 通过 vLLM 服务模型时计算得出数据。由于我们对模型进行了批处理和评估，我们通过将总时间除以评估数据集条目数来得出延迟。<li><strong>成本</strong>: 由于开源模型没有价格标签，我们通过以下方式估算成本:<img alt=img src=https://oss-ata.alibaba.com/article/2025/01/23e7766d-112d-41d8-af34-70696ce19a77.jpg>我们在成本计算中使用了 Azure ND40rs-v2 实例(8X V100 GPU)2024 年 4 月的按需付费定价。这并不精确，因为价格经常变动。我们会尽最大努力每天或至少每周更新这些数据。尽管如此，这应该能让人了解成本的大致范围，并帮助理解在所有条件相同的情况下的相对排序。</ul></ul><p>对于 firefunctions-v1、Nexusflow-Raven-v2 和 Meetkai-Functionary，我们在他们的服务免费期间使用他们的端点，所以我们没有包含这些模型的成本。<p><em>这一特定见解将帮助个人或企业根据需求和预算决定采用哪个模型。</em><h3 id=he-shi-shi-yong-han-shu-diao-yong-gong-ju-diao-yong-he-shi-shi-yong-ti-shi>何时使用函数调用 (工具调用)，何时使用提示? 🖊️</h3><p>下面的模型卡片展示了我们评估的不同模型支持的见解和函数调用功能。<p>从上面的模型卡片中，我们强调我们的评估同时涉及函数调用和非函数调用模型。对于函数调用模型，由于它们是专门设计用来生成函数调用的，我们没有提供任何系统提示，而是打开函数调用模式并将函数定义放在应该在的位置。对于非函数调用模型，我们只是用系统消息提示它们。我们提供了所有用于评估专有和开源模型的提示。<ol><li><p>对于所有函数调用模型，我们没有提供任何系统提示，而是打开函数调用模式并将函数定义放在应该在的位置。</p><li><p>对于聊天模型，我们明确提供了一个<strong>系统消息</strong>:</p> <pre class=language-plaintext data-lang=plaintext style=background:#2b303b;color:#c0c5ce><code class=language-plaintext data-lang=plaintext><span>SYSTEM_PROMPT_FOR_CHAT_MODEL = """
+</span><span>你是一个编写函数的专家。你会收到一个问题和一组可能的函数。
+</span><span>根据问题，你需要进行一次或多次函数/工具调用来实现目的。
+</span><span>如果没有可以使用的函数，请指出。如果给定的问题缺少函数所需的参数，也请指出。你应该只在工具调用部分返回函数调用。
+</span><span>"""
+</span></code></pre> <pre class=language-plaintext data-lang=plaintext style=background:#2b303b;color:#c0c5ce><code class=language-plaintext data-lang=plaintext><span>USER_MESSAGE_FOR_CHAT_MODEL = "问题:{user_prompt}\n这里是你可以调用的 JSON 格式函数列表:\n{functions}。如果你决定返回函数调用，不能包含任何其他文本。"
+</span></code></pre></ol><h4 id=chang-jian-cuo-wu>常见错误</h4><p>通过我们的基准测试 BFCL，我们能够识别出 LLM 在生成函数调用时的一些常见错误。这些错误很有趣，因为它们帮助我们理解当前模型的局限性，并为如何改进它们提供见解。<ol><li><p>GPT 的_函数文档难以格式化_，并且它们的_类型在现实场景中过于严格_。</p> <pre class=language-plaintext data-lang=plaintext style=background:#2b303b;color:#c0c5ce><code class=language-plaintext data-lang=plaintext><span>"Function": 
+</span><span>{
+</span><span>    "name": "calculate_binomial_probability",
+</span><span>    ...
+</span><span>    "parameters": 
+</span><span>    {
+</span><span>        "type": "object", 
+</span><span>        "properties": 
+</span><span>        {
+</span><span>            "number_of_trials": 
+</span><span>            {
+</span><span>                "type": "integer", 
+</span><span>                "description": "The total number of trials."
+</span><span>            },
+</span><span>            "number_of_successes": 
+</span><span>            {
+</span><span>                "type": "integer", 
+</span><span>                "description": "The desired number of successful outcomes."
+</span><span>            },
+</span><span>            "probability_of_success": 
+</span><span>            {
+</span><span>                "type": "float", 
+</span><span>                The probability of a successful outcome on any given trial.", 
+</span><span>                "default": 0.5
+</span><span>            }
+</span><span>            ...
+</span><span>        }
+</span><span>        "required": ["number_of_trials", "number_of_successes"]
+</span><span>    }
+</span><span>}
+</span></code></pre></ol><p>在这种情况下，我们需要手动将 float 转换为 number 以使函数与 OpenAI 兼容。此外，在精度和类型一致性方面，<code>number</code> 相比 <code>float</code> 传递的信息更少。<p>在 Gorilla OpenFunctions-v2 中，我们通过不限制参数的类型来提高函数文档的灵活性。换句话说，用户可以使用 <code>Tuple</code>、<code>Float</code>，甚至像 Java 中的 <code>Hashmap</code> 和 <code>Linked List</code> 这样的特定语言类型！<ol start=2><li><p>GPT 在_参数不能直接从用户问题中获得_而需要进行一些隐式转换的场景中表现不佳。以下是一个例子:</p> <pre class=language-plaintext data-lang=plaintext style=background:#2b303b;color:#c0c5ce><code class=language-plaintext data-lang=plaintext><span>"Function": 
+</span><span>{
+</span><span>    "name": "finance.predict_future_value",
+</span><span>    ...
+</span><span>    "parameters": 
+</span><span>    {
+</span><span>        "type": "object", 
+</span><span>        "properties": 
+</span><span>        {
+</span><span>            "present_value": 
+</span><span>            {
+</span><span>                "type": "number", 
+</span><span>                "description": "The present value of the investment."
+</span><span>            },
+</span><span>            
+</span><span>            "annual_interest_rate": 
+</span><span>            {
+</span><span>                "type": "number", 
+</span><span>                "description": "The annual interest rate of the investment."
+</span><span>            },
+</span><span>            
+</span><span>            "compounding_periods_per_year": 
+</span><span>            {
+</span><span>                "type": "integer", 
+</span><span>                "description": "The number of times that interest is compounded per year.", 
+</span><span>            },
+</span><span>            "time_years": 
+</span><span>            {
+</span><span>                "type": "integer", 
+</span><span>                "description": "The investment horizon in years."
+</span><span>            }
+</span><span>            ...
+</span><span>        }
+</span><span>        "required": ["present_value", "annual_interest_rate", "time_years"]
+</span><span>    }
+</span><span>}
+</span></code></pre></ol><p><strong>问题</strong>: 预测一笔 5000 美元的投资，年利率为 5%，按月复利计算，3 年后的未来价值。<pre class=language-plaintext data-lang=plaintext style=background:#2b303b;color:#c0c5ce><code class=language-plaintext data-lang=plaintext><span>GPT-4 output:
+</span><span>[{
+</span><span>    "name": "finance.predict_future_value",
+</span><span>    "parameters": 
+</span><span>    {
+</span><span>        "present_value": 5000,
+</span><span>        "annual_interest_rate": 5,
+</span><span>        "compounding_periods_per_year": 12,
+</span><span>        "time_years": 3
+</span><span>    }
+</span><span>}]
+</span></code></pre><pre class=language-plaintext data-lang=plaintext style=background:#2b303b;color:#c0c5ce><code class=language-plaintext data-lang=plaintext><span>Gorilla-openfunctions-v2 output:
+</span><span>[{
+</span><span>    "name": "finance.predict_future_value",
+</span><span>    "parameters": 
+</span><span>    {
+</span><span>        "present_value": 5000,
+</span><span>        "annual_interest_rate": 0.05,
+</span><span>        "compounding_periods_per_year": 12,
+</span><span>        "time_years": 3
+</span><span>    }
+</span><span>}]
+</span></code></pre><ol start=3><li><p>聊天模型倾向于生成_格式错误的函数调用_，其中参数可以提取但无法执行</p> <p><strong>示例</strong>: <code>mistral-medium</code> 生成的结果如 <code>solve\\_quadratic\\_equation(a=2， b=6， c=5)</code>。而使用 gorilla-openfunctions-v2，我们可以直接输出 <code>solve_quadratic_equation(a=3， b=2， c=1)</code>，这在收到结果时是可执行的。</p><li><p>REST API <em>缺少 URL</em>:</p> <p>由于 GPT-4 在获取天气数据的 REST API 请求中缺少必需的 URL 而产生差异。虽然 GPT-4 输出省略了必要的 URL，但 Gorilla Openfunctions-v2 模型成功包含了正确的 API 端点，使其能够成功执行并检索指定坐标和预报期的天气信息。</p> <pre class=language-plaintext data-lang=plaintext style=background:#2b303b;color:#c0c5ce><code class=language-plaintext data-lang=plaintext><span>"User": "Can you fetch me the weather data for the coordinates 
+</span><span>37.8651 N, 119.5383 W, including the hourly forecast for temperature, 
+</span><span>wind speed, and precipitation for the next 10 days?"
+</span><span>
+</span><span>"Function": 
+</span><span>{
+</span><span>    "name": "requests.get",
+</span><span>    ...
+</span><span>    "parameters": 
+</span><span>    {
+</span><span>        "type": "object", 
+</span><span>        "properties": 
+</span><span>        {
+</span><span>            "url": 
+</span><span>            {
+</span><span>                "type": "string", 
+</span><span>                "description": "The API endpoint for fetching
+</span><span>                weather data from the Open-Meteo API for the 
+</span><span>                given latitude and longitude, default 
+</span><span>                https://api.open-meteo.com/v1/forecast"
+</span><span>            }
+</span><span>            ...
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span></code></pre> <pre class=language-plaintext data-lang=plaintext style=background:#2b303b;color:#c0c5ce><code class=language-plaintext data-lang=plaintext><span>GPT-4 output:
+</span><span>{
+</span><span>    "name": "requests.get",
+</span><span>    "parameters": {
+</span><span>        "url": "Missing",
+</span><span>        "params": 
+</span><span>        {
+</span><span>            "latitude": "37.8651",
+</span><span>            "longitude": "-119.5383",
+</span><span>            "forecast_days": 10
+</span><span>        },
+</span><span>    }
+</span><span>}
+</span></code></pre> <pre class=language-plaintext data-lang=plaintext style=background:#2b303b;color:#c0c5ce><code class=language-plaintext data-lang=plaintext><span>Gorilla-Openfunctions-v2 output:
+</span><span>{
+</span><span>    "name": "requests.get",
+</span><span>    "parameters": {
+</span><span>        "url": "https://api.open-meteo.com/v1/forecast",
+</span><span>        "params": 
+</span><span>        {
+</span><span>            "latitude": "37.8651",
+</span><span>            "longitude": "-119.5383",
+</span><span>            "forecast_days": 10
+</span><span>        },
+</span><span>    }
+</span><span>}
+</span></code></pre></ol><h4 id=jie-lun>结论</h4><p>我们通过 Berkeley 函数调用排行榜对 LLM 的函数调用能力提供了全面和系统的评估。这里的研究表明，就简单的函数调用而言 (不涉及复杂规划和链式函数调用)，微调开源模型可以达到与专有模型相当的效果。此外，我们提供了 Gorilla Open Functions v2，这是一个开源模型，可以帮助用户构建具有函数调用功能并能与 JSON 兼容输出交互的 AI 应用程序。<p>我们希望你喜欢这篇博文。我们很乐意在 <a href=https://discord.gg/grXXvj9Whz rel=noopener target=_blank>Discord</a>、<a href=https://twitter.com/shishirpatil_/status/1661780076277678082 rel=noopener target=_blank>Twitter (#GorillaLLM)</a> 和 <a href=https://github.com/ShishirPatil/gorilla/ rel=noopener target=_blank>GitHub</a> 上听取你的意见。<h4 id=yin-yong>引用</h4><p>如果你想引用 Gorilla:<pre class=language-bibtex data-lang=bibtex style=background:#2b303b;color:#c0c5ce><code class=language-bibtex data-lang=bibtex><span style=color:#b48ead>@inproceedings</span><span>{berkeley-function-calling-leaderboard，
+</span><span>  </span><span style=color:#a3be8c>title</span><span>={</span><span style=color:#a3be8c>Berkeley Function Calling Leaderboard</span><span>}，
+</span><span>  author={</span><span style=color:#a3be8c>Fanjia Yan and Huanzhi Mao and Charlie Cheng-Jie Ji and Tianjun Zhang and Shishir G. Patil and Ion Stoica and Joseph E. Gonzalez</span><span>}，
+</span><span>  year={</span><span style=color:#a3be8c>2024</span><span>}，
+</span><span>  howpublished={</span><span style=color:#a3be8c>\\url{https://gorilla.cs.berkeley.edu/blogs/8_berkeley_function_calling_leaderboard.html}</span><span>}，
+</span><span>}
+</span></code></pre><p class=tagsData><a href=/tags/agent>/Agent/</a> <a href=/tags/ai>/AI/</a></main><footer><hr><div class=footContainer><div class=footLeft><p>Licensed under <a rel="noopener noreferrer" href=https://fr.wikipedia.org/wiki/Licence_MIT target=_blank>MIT</a><br> Built with <a rel="noopener noreferrer" href=https://www.getzola.org target=_blank>Zola</a> using <a rel="noopener noreferrer" href=https://github.com/Speyll/anemone target=_blank>anemone</a> theme & <a rel="noopener noreferrer" href=https://github.com/Speyll/veqev target=_blank>veqev</a> colors.<br></div><div class=footRight><a rel="noopener noreferrer" title="Subscribe via RSS for updates." class=icons__background href=https://linq.github.io/atom.xml target=_blank><svg class="icons icons__background"><use href=https://linq.github.io/icons.svg#rss></use></svg></a></div></div></footer></div>

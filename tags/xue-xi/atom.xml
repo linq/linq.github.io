@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh">
+    <title> - 学习</title>
+    <link href="https://linq.github.io/tags/xue-xi/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://linq.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-04-14T00:00:00+00:00</updated>
+    <id>https://linq.github.io/tags/xue-xi/atom.xml</id>
+    <entry xml:lang="zh">
+        <title>聊聊学习的85法则</title>
+        <published>2024-04-14T00:00:00+00:00</published>
+        <updated>2024-04-14T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://linq.github.io/posts/learn-rule-85/" type="text/html"/>
+        <id>https://linq.github.io/posts/learn-rule-85/</id>
+        
+        <content type="html">&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;linq.github.io&#x2F;posts&#x2F;learn-rule-85&#x2F;85-learn.webp&quot; alt=&quot;learn rule 85&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;近期因为工作上的变动，学习上有所松懈，已经有一段时间没有学习新的东西，书也一段时间没看了，今天意识到这个状态不太对，准备调整下状态。正好想起之前接触过的学习的85 原则，趁着这个机会梳理下。&lt;&#x2F;p&gt;
+&lt;p&gt;原论文是在自然上发表的 &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;www.nature.com&#x2F;articles&#x2F;s41467-019-12552-4.pdf&quot;&gt;The Eighty Five Percent Rule for optimal learning&lt;&#x2F;a&gt;，论文是关于机器学习相关，具体而言，对于一类广泛的学习算法（例如，基于随机梯度下降的算法），最佳训练错误率约为&lt;strong&gt;15.87%&lt;&#x2F;strong&gt;，或者说最佳训练准确率约为&lt;strong&gt;85%&lt;&#x2F;strong&gt;。这一规则适用于人工神经网络和生物合理的神经网络。论文的主要观点是关于&lt;strong&gt;最佳学习难度&lt;&#x2F;strong&gt;的。研究人员发现，当我们学习新事物时，存在一个“甜蜜区”，即学习难度既不太容易也不太难，此时学习进展最快。&lt;&#x2F;p&gt;
+&lt;p&gt;如果我们扩展到更宽泛的学习上看，它也很符合直觉：我们希望学习一些已知之外新的知识，但是又不能太难，太容易的知识会让我们感觉到无聊，而太难的又会打击我们的信心。所以我们需要找到一个合适的难度，让我们学新知识的时候，能保持 85%的准确率。这个时候问题就变成了我们应该如何找到这个甜蜜区？&lt;&#x2F;p&gt;
+&lt;p&gt;可行的策略：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;评估当前的水平&lt;&#x2F;li&gt;
+&lt;li&gt;渐进的增加难度&lt;&#x2F;li&gt;
+&lt;li&gt;适当的重复练习&lt;&#x2F;li&gt;
+&lt;li&gt;反馈和调整&lt;&#x2F;li&gt;
+&lt;li&gt;…&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;但是这个有点太复杂了，如果每学习一点东西都按照这套流程走一遍，估计这个动作本身消耗的精力都大于要学习本身。&lt;&#x2F;p&gt;
+&lt;p&gt;那有没什么简化的方式呢，这个时候就可以回顾下所谓的学习 85 法则了，参考&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;36kr.com&#x2F;p&#x2F;1236733055209095&quot;&gt;学习的 85% 法则&lt;&#x2F;a&gt; 这篇文章，首先我认为文章对The Eighty Five Percent Rule for optimal learning论文的解读是有问题的，论文强调的是通过合适的难度达到 85%的准确率，而文章直接曲解成 85%熟悉，15%新鲜的知识。&lt;&#x2F;p&gt;
+&lt;p&gt;但是我觉得结论又是有意思的，85%熟悉，15% 新内容的这种方式，它可以减轻我们内心的抗拒心理，更容易坚持下去。毕竟学习本身就是反人类的，人天生就想要待在舒适区，只是为了为了其他一些诉求，才不得以学习。而这种 15.87% 新鲜率的方式，让我们既可以不离舒适区太远，又能维持一定的学习诉求。而只要开始去做了，顺势的就会做的更多，这时候也就不会（也没必要）纠结所谓的 85% 熟悉，15%新内容了。&lt;&#x2F;p&gt;
+&lt;p&gt;如果讲 15.87 这个数字能给我什么启发，应该是温故知新吧。自我反思自己学习新东西的还是挺有兴趣的，但是对于学过的知识很少会去复习回顾，这样就导致很多知识学了就忘了，相当于没学，也间接导致有段时间对于学习很抗拒。&lt;&#x2F;p&gt;
+&lt;p&gt;孔老夫子说的好，『学而时习之，不亦悦乎』，学习中&lt;code&gt;要温故而知新，而且要进行刻意练习&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>
